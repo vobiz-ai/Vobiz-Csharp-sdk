@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Vobiz.Test/Vobiz.Test.csproj" />
+  <Project Path="src/Vobiz/Vobiz.csproj" />
+</Solution>
