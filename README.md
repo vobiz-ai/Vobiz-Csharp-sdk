@@ -1,263 +1,245 @@
-# Vobiz C# SDK
+# Vobiz C# Library
 
-The official C#/.NET SDK for [Vobiz](https://vobiz.ai) — the AI-first voice & telephony API platform for builders. Integrate powerful telephony features directly into your .NET applications to make and control calls, manage SIP trunks, provision phone numbers, coordinate conferences, and handle call recordings with ease.
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Vobiz%2FC%23)
+[![nuget shield](https://img.shields.io/nuget/v/Vobiz)](https://nuget.org/packages/Vobiz)
 
-## Quick links
+The Vobiz C# library provides convenient access to the Vobiz APIs from C#.
 
-- 📚 **Documentation:** [docs.vobiz.ai](https://docs.vobiz.ai)
-- 🔑 **Dashboard & credentials:** [console.vobiz.ai](https://console.vobiz.ai)
-- 🧾 **Full API reference:** [`./reference.md`](./reference.md)
-- ⚡ **Usage cheat-sheet:** [`./USAGE.md`](./USAGE.md)
+## Table of Contents
 
-## Features
-
-The Vobiz C# SDK provides comprehensive access to the Vobiz platform's capabilities:
-
-- **Programmatic Call Control:** Initiate outbound calls, manage live calls, and hang up calls.
-- **In-Call Actions:** Play audio, convert text to speech, send DTMF tones, and control call recordings dynamically.
-- **Call Detail Records (CDRs):** Retrieve and search historical call records with extensive filtering options.
-- **Recording Management:** List, retrieve, and delete call recordings.
-- **Phone Number Management:** List available numbers, purchase from inventory, and assign/unassign numbers to SIP trunks or sub-accounts.
-- **SIP Trunk & Endpoint Management:** Configure SIP trunks, manage credentials, and control IP access lists.
-- **Conference Management:** Create, list, retrieve, and terminate conference rooms, and manage individual conference members.
-- **Sub-Account & KYC Management:** Create and manage sub-accounts, and perform KYC verifications.
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Reference](#reference)
+- [Usage](#usage)
+- [Environments](#environments)
+- [Exception Handling](#exception-handling)
+- [Advanced](#advanced)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+  - [Raw Response](#raw-response)
+  - [Additional Headers](#additional-headers)
+  - [Additional Query Parameters](#additional-query-parameters)
+  - [Forward Compatible Enums](#forward-compatible-enums)
+- [Contributing](#contributing)
 
 ## Requirements
 
-The Vobiz C# SDK targets **.NET Standard 2.0**, making it compatible with:
-
-- .NET Core 2.0+ / .NET 5.0+
-- .NET Framework 4.6.1+
-- Mono 5.4+
-- Xamarin.iOS 10.14+
-- Xamarin.Android 8.0+
-- UWP 10.0.16299+
+This SDK requires:
 
 ## Installation
-
-Install the Vobiz C# SDK from NuGet using the .NET CLI:
 
 ```sh
 dotnet add package Vobiz
 ```
 
-Alternatively, you can add a `PackageReference` directly to your `.csproj` file:
+## Reference
 
-```xml
-<PackageReference Include="Vobiz" Version="*" />
-```
+A full reference for this library is available [here](./reference.md).
 
-## Authentication
+## Usage
 
-To authenticate your requests with the Vobiz API, you need your **Auth Token** and **Auth ID**. These credentials can be found in your [Vobiz Dashboard](https://console.vobiz.ai). The SDK uses these credentials to set the `X-Auth-Token` and `X-Auth-ID` HTTP headers for each API request.
-
-It is highly recommended to load your credentials from environment variables rather than hardcoding them in your application.
+Instantiate and use the client with the following:
 
 ```csharp
 using Vobiz;
-using System;
 
-// Load credentials from environment variables
-string authToken = Environment.GetEnvironmentVariable("VOBIZ_AUTH_TOKEN") ?? "YOUR_AUTH_TOKEN";
-string authId = Environment.GetEnvironmentVariable("VOBIZ_AUTH_ID") ?? "YOUR_AUTH_ID";
-
-// Initialize the VobizApiClient
-var client = new VobizApiClient(authToken, authId);
-```
-
-## Quickstart
-
-This example demonstrates how to initiate an outbound call using the `MakeCallAsync` method. When the recipient answers, Vobiz will fetch the `AnswerUrl` you provide, which should return VobizXML to define the call flow.
-
-```csharp
-using Vobiz;
-using System;
-using System.Threading.Tasks;
-
-public class Quickstart
-{
-    public static async Task Main(string[] args)
+var client = new VobizApiClient("AUTH_TOKEN", "API_KEY");
+await client.Calls.MakeCallAsync(
+    new MakeCallRequest
     {
-        string authToken = Environment.GetEnvironmentVariable("VOBIZ_AUTH_TOKEN") ?? "YOUR_AUTH_TOKEN";
-        string authId = Environment.GetEnvironmentVariable("VOBIZ_AUTH_ID") ?? "YOUR_AUTH_ID";
+        AuthId = "MA_XXXXXX",
+        From = "14155551234",
+        To = "+919876543210",
+        AnswerUrl = "https://example.com/answer",
+        AnswerMethod = "POST",
+    }
+);
+```
 
-        var client = new VobizApiClient(authToken, authId);
+## Environments
 
-        try
+This SDK allows you to configure different environments for API requests.
+
+```csharp
+using Vobiz;
+
+var client = new VobizApiClient(new ClientOptions
+{
+    BaseUrl = VobizApiEnvironment.Production
+});
+```
+
+## Exception Handling
+
+When the API returns a non-success status code (4xx or 5xx response), a subclass of the following error
+will be thrown.
+
+```csharp
+using Vobiz;
+
+try {
+    var response = await client.Calls.MakeCallAsync(...);
+} catch (VobizApiApiException e) {
+    System.Console.WriteLine(e.Body);
+    System.Console.WriteLine(e.StatusCode);
+
+    // Access the raw HTTP response (status code, URL, headers) off the exception
+    var rawResponse = e.RawResponse;
+    if (rawResponse != null)
+    {
+        System.Console.WriteLine(rawResponse.Url);
+        if (rawResponse.Headers.TryGetValue("X-Request-Id", out var requestId))
         {
-            Console.WriteLine("Initiating call...");
-            var response = await client.Calls.MakeCallAsync(
-                new MakeCallRequest
-                {
-                    AuthId = authId,
-                    From = "14155551234", // Your Vobiz-enabled phone number
-                    To = "+919876543210", // Recipient's phone number
-                    AnswerUrl = "https://example.com/answer", // URL for VobizXML
-                    AnswerMethod = "POST",
-                }
-            );
-            
-            // The response object contains details like the CallUuid
-            Console.WriteLine($"Call initiated successfully. Call UUID: {response.CallUuid}");
+            System.Console.WriteLine($"Request ID: {requestId}");
         }
-        catch (Exception ex)
+    }
+}
+```
+
+## Advanced
+
+### Retries
+
+The SDK is instrumented with automatic retries with exponential backoff. A request will be retried as long
+as the request is deemed retryable and the number of retry attempts has not grown larger than the configured
+retry limit (default: 2).
+
+Which status codes are retried depends on the `retryStatusCodes` generator configuration:
+
+**`legacy`** (current default): retries on
+- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
+- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
+- [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses) (All server errors, including 500)
+
+**`recommended`**: retries on
+- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
+- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
+- [502](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502) (Bad Gateway)
+- [503](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503) (Service Unavailable)
+- [504](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504) (Gateway Timeout)
+
+Use the `MaxRetries` request option to configure this behavior.
+
+```csharp
+var response = await client.Calls.MakeCallAsync(
+    ...,
+    new RequestOptions {
+        MaxRetries: 0 // Override MaxRetries at the request level
+    }
+);
+```
+
+### Timeouts
+
+The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
+
+```csharp
+var response = await client.Calls.MakeCallAsync(
+    ...,
+    new RequestOptions {
+        Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
+    }
+);
+```
+
+### Raw Response
+
+Access raw HTTP response data (status code, headers, URL) alongside parsed response data using the `.WithRawResponse()` method.
+
+```csharp
+using Vobiz;
+
+// Access raw response data (status code, headers, etc.) alongside the parsed response
+var result = await client.Calls.MakeCallAsync(...).WithRawResponse();
+
+// Access the parsed data
+var data = result.Data;
+
+// Access raw response metadata
+var statusCode = result.RawResponse.StatusCode;
+var headers = result.RawResponse.Headers;
+var url = result.RawResponse.Url;
+
+// Access specific headers (case-insensitive)
+if (headers.TryGetValue("X-Request-Id", out var requestId))
+{
+    System.Console.WriteLine($"Request ID: {requestId}");
+}
+
+// For the default behavior, simply await without .WithRawResponse()
+var data = await client.Calls.MakeCallAsync(...);
+
+// .WithRawResponse() also works on streaming endpoints (returns IAsyncEnumerable<T> + RawResponse)
+// and on endpoints with no response body (returns RawResponse only).
+```
+
+### Additional Headers
+
+If you would like to send additional headers as part of the request, use the `AdditionalHeaders` request option.
+
+```csharp
+var response = await client.Calls.MakeCallAsync(
+    ...,
+    new RequestOptions {
+        AdditionalHeaders = new Dictionary<string, string?>
         {
-            Console.WriteLine($"Error making call: {ex.Message}");
+            { "X-Custom-Header", "custom-value" }
         }
     }
-}
-```
-
-## Common operations
-
-Below are several examples of common operations. For a complete list of methods and their parameters, see [`reference.md`](./reference.md).
-
-### Convert Text to Speech (TTS) on a Live Call
-
-Convert text to speech and play it to a live call leg using the `SpeakText.CallAsync` method.
-
-```csharp
-using Vobiz;
-using System;
-using System.Threading.Tasks;
-
-var client = new VobizApiClient("YOUR_AUTH_TOKEN", "YOUR_AUTH_ID");
-const string authId = "YOUR_AUTH_ID";
-
-await client.SpeakText.CallAsync(
-    new SpeakTextCallRequest
-    {
-        AuthId = authId,
-        CallUuid = "call_uuid_here",
-        Text = "Hello, your appointment is confirmed for tomorrow at 3 PM.",
-        Voice = "WOMAN",
-        Language = "en-US",
-    }
 );
 ```
 
-### Create a SIP Trunk
+### Additional Query Parameters
 
-Configure a new SIP trunk for inbound or outbound calling.
-
-```csharp
-using Vobiz;
-using System;
-using System.Threading.Tasks;
-
-var client = new VobizApiClient("YOUR_AUTH_TOKEN", "YOUR_AUTH_ID");
-const string authId = "YOUR_AUTH_ID";
-
-var trunkResponse = await client.Trunks.CreateTrunkAsync(
-    new CreateTrunkRequest
-    {
-        AuthId = authId,
-        Name = "My Outbound Trunk",
-        TrunkType = "OUTBOUND",
-        MaxConcurrentCalls = 10,
-    }
-);
-
-Console.WriteLine($"Trunk created with ID: {trunkResponse.TrunkId}");
-```
-
-### List Call Recordings
-
-Retrieve all call recordings associated with your account.
+If you would like to send additional query parameters as part of the request, use the `AdditionalQueryParameters` request option.
 
 ```csharp
-using Vobiz;
-using System;
-using System.Threading.Tasks;
-
-var client = new VobizApiClient("YOUR_AUTH_TOKEN", "YOUR_AUTH_ID");
-const string authId = "YOUR_AUTH_ID";
-
-var recordingsResponse = await client.Recordings.ListRecordingsAsync(
-    new ListRecordingsRequest 
-    { 
-        AuthId = authId 
-    }
-);
-
-foreach (var recording in recordingsResponse.Recordings)
-{
-    Console.WriteLine($"Recording ID: {recording.RecordingId}");
-}
-```
-
-### Send DTMF Tones
-
-Send DTMF (keypad) tones on an active call. You can use `w` for a 0.5s pause and `W` for a 1s pause.
-
-```csharp
-using Vobiz;
-using System;
-using System.Threading.Tasks;
-
-var client = new VobizApiClient("YOUR_AUTH_TOKEN", "YOUR_AUTH_ID");
-const string authId = "YOUR_AUTH_ID";
-
-await client.Dtmf.SendDtmfAsync(
-    new SendDtmfRequest
-    {
-        AuthId = authId,
-        CallUuid = "call_uuid_here",
-        Digits = "1234",
-        Leg = SendDtmfRequestLeg.Aleg,
-    }
-);
-```
-
-## Async Operations
-
-All network-bound methods in the Vobiz C# SDK are fully asynchronous and return a `Task` or `Task<T>`. They are designed to be used with the `async` and `await` keywords, ensuring that your application's threads are not blocked while waiting for HTTP responses from the Vobiz API.
-
-```csharp
-// All API operations are non-blocking and awaitable
-var accountDetails = await client.Account.RetrieveAccountAsync();
-```
-
-## Error handling
-
-The SDK throws a standard `Exception` if a network error occurs or if the Vobiz API returns a non-success HTTP status code. It is best practice to wrap your API calls in a `try/catch` block to handle these errors gracefully.
-
-```csharp
-try
-{
-    await client.LiveCalls.HangupCallAsync(
-        new HangupCallRequest 
-        { 
-            AuthId = authId, 
-            CallUuid = "invalid_uuid" 
+var response = await client.Calls.MakeCallAsync(
+    ...,
+    new RequestOptions {
+        AdditionalQueryParameters = new Dictionary<string, string>
+        {
+            { "custom_param", "custom-value" }
         }
-    );
-}
-catch (Exception ex)
-{
-    // Handle the error (e.g., log it, retry, or notify the user)
-    Console.WriteLine($"API request failed: {ex.Message}");
-}
+    }
+);
 ```
 
-## Other Vobiz SDKs
+### Forward Compatible Enums
 
-If you are building services in other languages, check out our official sibling SDKs:
+This SDK uses forward-compatible enums that can handle unknown values gracefully.
 
-| Language | Repository |
-|---|---|
-| **Node.js / TypeScript** | [vobiz-ai/Vobiz-Node-SDK](https://github.com/vobiz-ai/Vobiz-Node-SDK) |
-| **Python** | [vobiz-ai/Vobiz-Python-SDK](https://github.com/vobiz-ai/Vobiz-Python-SDK) |
-| **Go** | [vobiz-ai/Vobiz-Go-SDK](https://github.com/vobiz-ai/Vobiz-Go-SDK) |
-| **Ruby** | [vobiz-ai/Vobiz-Ruby-SDK](https://github.com/vobiz-ai/Vobiz-Ruby-SDK) |
-| **Java** | [vobiz-ai/Vobiz-Java-SDK](https://github.com/vobiz-ai/Vobiz-Java-SDK) |
-| **PHP** | [vobiz-ai/Vobiz-PHP-SDK](https://github.com/vobiz-ai/Vobiz-PHP-SDK) |
+```csharp
+using Vobiz;
 
-## Support
+// Using a built-in value
+var listQueuedCallsRequestStatus = ListQueuedCallsRequestStatus.Live;
 
-- **Documentation:** [docs.vobiz.ai](https://docs.vobiz.ai)
-- **Dashboard:** [console.vobiz.ai](https://console.vobiz.ai)
+// Using a custom value
+var customListQueuedCallsRequestStatus = ListQueuedCallsRequestStatus.FromCustom("custom-value");
 
-## License
+// Using in a switch statement
+switch (listQueuedCallsRequestStatus.Value)
+{
+    case ListQueuedCallsRequestStatus.Values.Live:
+        Console.WriteLine("Live");
+        break;
+    default:
+        Console.WriteLine($"Unknown value: {listQueuedCallsRequestStatus.Value}");
+        break;
+}
 
-This project is licensed under the MIT License.
+// Explicit casting
+string listQueuedCallsRequestStatusString = (string)ListQueuedCallsRequestStatus.Live;
+ListQueuedCallsRequestStatus listQueuedCallsRequestStatusFromString = (ListQueuedCallsRequestStatus)"live";
+```
+
+## Contributing
+
+While we value open-source contributions to this SDK, this library is generated programmatically.
+Additions made directly to this library would have to be moved over to our generation code,
+otherwise they would be overwritten upon the next generated release. Feel free to open a PR as
+a proof of concept, but know that we will not be able to merge it as-is. We suggest opening
+an issue first to discuss with us!
+
+On the other hand, contributions to the README are always very welcome!

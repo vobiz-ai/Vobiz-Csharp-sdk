@@ -5,7 +5,8 @@
   "generatorConfig": {
     "namespace": "Vobiz"
   },
-  "originGitCommit": "e8a4ebb9425a3225753a525b2fd4e400cdc04676",
+  "originGitCommit": "2c7bf102587f9c32268c210da06bed5270745087",
   "originGitCommitIsDirty": true,
-  "invokedBy": "manual"
+  "invokedBy": "ci",
+  "ciProvider": "github"
 }
