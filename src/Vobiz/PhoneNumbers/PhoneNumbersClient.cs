@@ -539,6 +539,115 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
         }
     }
 
+    private async Task<WithRawResponse<GetNumberHealthResponse>> GetNumberHealthAsyncCore(
+        GetNumberHealthRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 2)
+            .Add("granularity", request.Granularity)
+            .Add("days", request.Days)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
+        var _headers = await new Vobiz.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    Method = HttpMethod.Get,
+                    Path = string.Format(
+                        "api/v1/account/{0}/numbers/{1}/health",
+                        ValueConvert.ToPathParameterString(request.AuthId),
+                        ValueConvert.ToPathParameterString(request.E164)
+                    ),
+                    QueryString = _queryString,
+                    Headers = _headers,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                var responseData = JsonUtils.Deserialize<GetNumberHealthResponse>(responseBody)!;
+                return new WithRawResponse<GetNumberHealthResponse>()
+                {
+                    Data = responseData,
+                    RawResponse = new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new VobizApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e,
+                    rawResponse: new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    }
+                );
+            }
+        }
+        {
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 404:
+                        throw new NotFoundError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new VobizApiApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody,
+                rawResponse: new Vobiz.RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                }
+            );
+        }
+    }
+
     private async Task<RawResponse> AssignDidToSubaccountAsyncCore(
         AssignDidToSubaccountRequest request,
         RequestOptions? options = null,
@@ -839,6 +948,33 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
     {
         return new WithRawResponseTask(
             UnassignNumberFromTrunkAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Returns the health & analytics dashboard for one of your numbers: current
+    /// status, spam flag, and call metrics over the selected window (total and
+    /// answered calls, answer rate, minutes, average duration) plus a per-period
+    /// time series of snapshots.
+    /// </summary>
+    /// <example><code>
+    /// await client.PhoneNumbers.GetNumberHealthAsync(
+    ///     new GetNumberHealthRequest
+    ///     {
+    ///         AuthId = "MA_XXXXXX",
+    ///         E164 = "%2B919876543210",
+    ///         Days = 30,
+    ///     }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<GetNumberHealthResponse> GetNumberHealthAsync(
+        GetNumberHealthRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<GetNumberHealthResponse>(
+            GetNumberHealthAsyncCore(request, options, cancellationToken)
         );
     }
 

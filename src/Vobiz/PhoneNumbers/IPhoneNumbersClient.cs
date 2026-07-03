@@ -67,6 +67,18 @@ public partial interface IPhoneNumbersClient
     );
 
     /// <summary>
+    /// Returns the health & analytics dashboard for one of your numbers: current
+    /// status, spam flag, and call metrics over the selected window (total and
+    /// answered calls, answer rate, minutes, average duration) plus a per-period
+    /// time series of snapshots.
+    /// </summary>
+    WithRawResponseTask<GetNumberHealthResponse> GetNumberHealthAsync(
+        GetNumberHealthRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
     /// Assign a parent-pool DID to a sub-account.
     /// </summary>
     WithRawResponseTask AssignDidToSubaccountAsync(

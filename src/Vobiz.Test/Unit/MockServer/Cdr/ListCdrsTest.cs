@@ -278,6 +278,11 @@ public class ListCdrsTest : BaseMockServerTest
                     .WithParam("start_date", "2026-03-01")
                     .WithParam("end_date", "2026-03-17")
                     .WithParam("min_duration", "10")
+                    .WithParam("sip_call_id", "dD1qwu5VZ5iK3ed5u3uspjY5RKL")
+                    .WithParam("bridge_uuid", "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a")
+                    .WithParam("hangup_cause", "NORMAL_CLEARING")
+                    .WithParam("hangup_disposition", "send_refuse")
+                    .WithParam("context", "sip-trunking")
                     .UsingGet()
             )
             .RespondWith(
@@ -296,6 +301,11 @@ public class ListCdrsTest : BaseMockServerTest
                 StartDate = new DateOnly(2026, 3, 1),
                 EndDate = new DateOnly(2026, 3, 17),
                 MinDuration = 10,
+                SipCallId = "dD1qwu5VZ5iK3ed5u3uspjY5RKL",
+                BridgeUuid = "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a",
+                HangupCause = "NORMAL_CLEARING",
+                HangupDisposition = "send_refuse",
+                Context = "sip-trunking",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

@@ -48,6 +48,48 @@ public record ExportCdrsRequest
     [JsonIgnore]
     public int? MinDuration { get; set; }
 
+    /// <summary>
+    /// Filter by the SIP Call-ID of the call (matches the cdr's sip_call_id field).
+    /// </summary>
+    [JsonIgnore]
+    public string? SipCallId { get; set; }
+
+    /// <summary>
+    /// Filter by the UUID of the bridged leg (matches the cdr's bridge_uuid field).
+    /// </summary>
+    [JsonIgnore]
+    public string? BridgeUuid { get; set; }
+
+    /// <summary>
+    /// Filter by telephony hangup cause, e.g. NORMAL_CLEARING.
+    /// </summary>
+    [JsonIgnore]
+    public string? HangupCause { get; set; }
+
+    /// <summary>
+    /// Filter by how the leg was released, e.g. send_refuse.
+    /// </summary>
+    [JsonIgnore]
+    public string? HangupDisposition { get; set; }
+
+    /// <summary>
+    /// Filter by the call context, e.g. sip-trunking.
+    /// </summary>
+    [JsonIgnore]
+    public string? Context { get; set; }
+
+    /// <summary>
+    /// Filter by the campaign identifier associated with the call.
+    /// </summary>
+    [JsonIgnore]
+    public string? CampaignId { get; set; }
+
+    /// <summary>
+    /// Free-text search across CDR fields (numbers, IDs, etc.).
+    /// </summary>
+    [JsonIgnore]
+    public string? Search { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

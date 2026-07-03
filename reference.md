@@ -598,6 +598,11 @@ await client.Cdr.ListCdrsAsync(
         StartDate = new DateOnly(2026, 3, 1),
         EndDate = new DateOnly(2026, 3, 17),
         MinDuration = 10,
+        SipCallId = "dD1qwu5VZ5iK3ed5u3uspjY5RKL",
+        BridgeUuid = "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a",
+        HangupCause = "NORMAL_CLEARING",
+        HangupDisposition = "send_refuse",
+        Context = "sip-trunking",
     }
 );
 ```
@@ -663,6 +668,11 @@ await client.Cdr.SearchCdrsAsync(
         StartDate = new DateOnly(2026, 3, 1),
         EndDate = new DateOnly(2026, 3, 17),
         MinDuration = 10,
+        SipCallId = "dD1qwu5VZ5iK3ed5u3uspjY5RKL",
+        BridgeUuid = "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a",
+        HangupCause = "NORMAL_CLEARING",
+        HangupDisposition = "send_refuse",
+        Context = "sip-trunking",
     }
 );
 ```
@@ -2365,6 +2375,70 @@ await client.PhoneNumbers.UnassignNumberFromTrunkAsync(
 <dd>
 
 **request:** `UnassignNumberFromTrunkRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.PhoneNumbers.<a href="/src/Vobiz/PhoneNumbers/PhoneNumbersClient.cs">GetNumberHealthAsync</a>(GetNumberHealthRequest { ... }) -> WithRawResponseTask&lt;GetNumberHealthResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns the health & analytics dashboard for one of your numbers: current
+status, spam flag, and call metrics over the selected window (total and
+answered calls, answer rate, minutes, average duration) plus a per-period
+time series of snapshots.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.PhoneNumbers.GetNumberHealthAsync(
+    new GetNumberHealthRequest
+    {
+        AuthId = "MA_XXXXXX",
+        E164 = "%2B919876543210",
+        Days = 30,
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `GetNumberHealthRequest` 
     
 </dd>
 </dl>

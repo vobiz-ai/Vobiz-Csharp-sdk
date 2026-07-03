@@ -18,13 +18,20 @@ public partial class CdrClient : ICdrClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 8)
+        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 15)
             .Add("from_number", request.FromNumber)
             .Add("to_number", request.ToNumber)
             .Add("start_date", request.StartDate)
             .Add("end_date", request.EndDate)
             .Add("call_direction", request.CallDirection)
             .Add("min_duration", request.MinDuration)
+            .Add("sip_call_id", request.SipCallId)
+            .Add("bridge_uuid", request.BridgeUuid)
+            .Add("hangup_cause", request.HangupCause)
+            .Add("hangup_disposition", request.HangupDisposition)
+            .Add("context", request.Context)
+            .Add("campaign_id", request.CampaignId)
+            .Add("search", request.Search)
             .Add("page", request.Page)
             .Add("per_page", request.PerPage)
             .MergeAdditional(options?.AdditionalQueryParameters)
@@ -110,13 +117,20 @@ public partial class CdrClient : ICdrClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 8)
+        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 15)
             .Add("from_number", request.FromNumber)
             .Add("to_number", request.ToNumber)
             .Add("start_date", request.StartDate)
             .Add("end_date", request.EndDate)
             .Add("call_direction", request.CallDirection)
             .Add("min_duration", request.MinDuration)
+            .Add("sip_call_id", request.SipCallId)
+            .Add("bridge_uuid", request.BridgeUuid)
+            .Add("hangup_cause", request.HangupCause)
+            .Add("hangup_disposition", request.HangupDisposition)
+            .Add("context", request.Context)
+            .Add("campaign_id", request.CampaignId)
+            .Add("search", request.Search)
             .Add("page", request.Page)
             .Add("per_page", request.PerPage)
             .MergeAdditional(options?.AdditionalQueryParameters)
@@ -287,13 +301,20 @@ public partial class CdrClient : ICdrClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 6)
+        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 13)
             .Add("from_number", request.FromNumber)
             .Add("to_number", request.ToNumber)
             .Add("start_date", request.StartDate)
             .Add("end_date", request.EndDate)
             .Add("call_direction", request.CallDirection)
             .Add("min_duration", request.MinDuration)
+            .Add("sip_call_id", request.SipCallId)
+            .Add("bridge_uuid", request.BridgeUuid)
+            .Add("hangup_cause", request.HangupCause)
+            .Add("hangup_disposition", request.HangupDisposition)
+            .Add("context", request.Context)
+            .Add("campaign_id", request.CampaignId)
+            .Add("search", request.Search)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
         var _headers = await new Vobiz.Core.HeadersBuilder.Builder()
@@ -467,6 +488,11 @@ public partial class CdrClient : ICdrClient
     ///         StartDate = new DateOnly(2026, 3, 1),
     ///         EndDate = new DateOnly(2026, 3, 17),
     ///         MinDuration = 10,
+    ///         SipCallId = "dD1qwu5VZ5iK3ed5u3uspjY5RKL",
+    ///         BridgeUuid = "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a",
+    ///         HangupCause = "NORMAL_CLEARING",
+    ///         HangupDisposition = "send_refuse",
+    ///         Context = "sip-trunking",
     ///     }
     /// );
     /// </code></example>
@@ -495,6 +521,11 @@ public partial class CdrClient : ICdrClient
     ///         StartDate = new DateOnly(2026, 3, 1),
     ///         EndDate = new DateOnly(2026, 3, 17),
     ///         MinDuration = 10,
+    ///         SipCallId = "dD1qwu5VZ5iK3ed5u3uspjY5RKL",
+    ///         BridgeUuid = "4b7ae653-f40d-42f1-b582-6b05dfcd0c0a",
+    ///         HangupCause = "NORMAL_CLEARING",
+    ///         HangupDisposition = "send_refuse",
+    ///         Context = "sip-trunking",
     ///     }
     /// );
     /// </code></example>
