@@ -2668,10 +2668,16 @@ await client.Trunks.CreateTrunkAsync(
     new CreateTrunkRequest
     {
         AuthId = "MA_XXXXXX",
-        Name = "My Outbound Trunk",
-        TrunkType = "OUTBOUND",
-        MaxConcurrentCalls = 10,
-        WebhookUrl = "https://your-app.example.com/trunk-webhook",
+        Name = "Retell AI SIP",
+        TrunkDirection = CreateTrunkRequestTrunkDirection.Outbound,
+        Transport = CreateTrunkRequestTransport.Udp,
+        ConcurrentCallsLimit = 50,
+        CpsLimit = 15,
+        CredentialUuid = "b1e2...",
+        IpaclUuid = "c3d4...",
+        Recording = true,
+        EnableTranscription = true,
+        WebhookUrl = "https://example.com/vobiz/webhook",
         WebhookMethod = CreateTrunkRequestWebhookMethod.Post,
     }
 );
@@ -2785,14 +2791,7 @@ Update a SIP trunk's name, configuration, or status.
 
 ```csharp
 await client.Trunks.UpdateTrunkAsync(
-    new UpdateTrunkRequest
-    {
-        AuthId = "MA_XXXXXX",
-        TrunkId = "trunk_id",
-        Name = "name",
-        MaxConcurrentCalls = 1,
-        Enabled = true,
-    }
+    new UpdateTrunkRequest { AuthId = "MA_XXXXXX", TrunkId = "trunk_id" }
 );
 ```
 </dd>

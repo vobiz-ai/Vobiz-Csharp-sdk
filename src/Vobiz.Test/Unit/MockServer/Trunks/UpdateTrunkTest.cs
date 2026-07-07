@@ -13,11 +13,7 @@ public class UpdateTrunkTest : BaseMockServerTest
     public async Task MockServerTest_1()
     {
         const string requestJson = """
-            {
-              "name": "name",
-              "max_concurrent_calls": 1,
-              "enabled": true
-            }
+            {}
             """;
 
         const string mockResponse = """
@@ -64,11 +60,27 @@ public class UpdateTrunkTest : BaseMockServerTest
             {
                 AuthId = "auth_id",
                 TrunkId = "trunk_id",
-                Name = "name",
-                MaxConcurrentCalls = 1,
-                Enabled = true,
+                Name = null,
+                TrunkDirection = null,
+                TrunkStatus = null,
+                Secure = null,
+                TrunkDomain = null,
+                Transport = null,
+                InboundDestination = null,
+                Description = null,
+                ConcurrentCallsLimit = null,
+                CpsLimit = null,
+                CredentialUuid = null,
+                IpaclUuid = null,
+                PrimaryUriUuid = null,
+                FallbackUriUuid = null,
+                Recording = null,
+                EnableTranscription = null,
+                PiiRedaction = null,
+                PiiEntityTypes = null,
                 WebhookUrl = null,
                 WebhookMethod = null,
+                RecordingWebhookEnabled = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -78,11 +90,7 @@ public class UpdateTrunkTest : BaseMockServerTest
     public async Task MockServerTest_2()
     {
         const string requestJson = """
-            {
-              "name": "name",
-              "max_concurrent_calls": 1,
-              "enabled": true
-            }
+            {}
             """;
 
         const string mockResponse = """
@@ -125,14 +133,7 @@ public class UpdateTrunkTest : BaseMockServerTest
             );
 
         var response = await Client.Trunks.UpdateTrunkAsync(
-            new UpdateTrunkRequest
-            {
-                AuthId = "MA_XXXXXX",
-                TrunkId = "trunk_id",
-                Name = "name",
-                MaxConcurrentCalls = 1,
-                Enabled = true,
-            }
+            new UpdateTrunkRequest { AuthId = "MA_XXXXXX", TrunkId = "trunk_id" }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }

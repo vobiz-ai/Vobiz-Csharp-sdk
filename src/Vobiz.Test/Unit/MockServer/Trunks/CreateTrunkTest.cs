@@ -14,9 +14,7 @@ public class CreateTrunkTest : BaseMockServerTest
     {
         const string requestJson = """
             {
-              "name": "name",
-              "trunk_type": "trunk_type",
-              "max_concurrent_calls": 1
+              "name": "name"
             }
             """;
 
@@ -64,10 +62,29 @@ public class CreateTrunkTest : BaseMockServerTest
             {
                 AuthId = "auth_id",
                 Name = "name",
-                TrunkType = "trunk_type",
-                MaxConcurrentCalls = 1,
+                TrunkDirection = null,
+                TrunkStatus = null,
+                Secure = null,
+                TrunkDomain = null,
+                Transport = null,
+                InboundDestination = null,
+                Description = null,
+                ConcurrentCallsLimit = null,
+                CpsLimit = null,
+                CredentialUuid = null,
+                IpaclUuid = null,
+                PrimaryUriUuid = null,
+                FallbackUriUuid = null,
+                Recording = null,
+                EnableTranscription = null,
+                PiiRedaction = null,
+                PiiEntityTypes = null,
                 WebhookUrl = null,
                 WebhookMethod = null,
+                RecordingWebhookEnabled = null,
+                Username = null,
+                Password = null,
+                IpWhitelist = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -78,10 +95,16 @@ public class CreateTrunkTest : BaseMockServerTest
     {
         const string requestJson = """
             {
-              "name": "My Outbound Trunk",
-              "trunk_type": "OUTBOUND",
-              "max_concurrent_calls": 10,
-              "webhook_url": "https://your-app.example.com/trunk-webhook",
+              "name": "Retell AI SIP",
+              "trunk_direction": "outbound",
+              "transport": "udp",
+              "concurrent_calls_limit": 50,
+              "cps_limit": 15,
+              "credential_uuid": "b1e2...",
+              "ipacl_uuid": "c3d4...",
+              "recording": true,
+              "enable_transcription": true,
+              "webhook_url": "https://example.com/vobiz/webhook",
               "webhook_method": "POST"
             }
             """;
@@ -129,10 +152,16 @@ public class CreateTrunkTest : BaseMockServerTest
             new CreateTrunkRequest
             {
                 AuthId = "MA_XXXXXX",
-                Name = "My Outbound Trunk",
-                TrunkType = "OUTBOUND",
-                MaxConcurrentCalls = 10,
-                WebhookUrl = "https://your-app.example.com/trunk-webhook",
+                Name = "Retell AI SIP",
+                TrunkDirection = CreateTrunkRequestTrunkDirection.Outbound,
+                Transport = CreateTrunkRequestTransport.Udp,
+                ConcurrentCallsLimit = 50,
+                CpsLimit = 15,
+                CredentialUuid = "b1e2...",
+                IpaclUuid = "c3d4...",
+                Recording = true,
+                EnableTranscription = true,
+                WebhookUrl = "https://example.com/vobiz/webhook",
                 WebhookMethod = CreateTrunkRequestWebhookMethod.Post,
             }
         );
