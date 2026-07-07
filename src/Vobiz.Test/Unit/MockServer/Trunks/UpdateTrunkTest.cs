@@ -67,6 +67,8 @@ public class UpdateTrunkTest : BaseMockServerTest
                 Name = "name",
                 MaxConcurrentCalls = 1,
                 Enabled = true,
+                WebhookUrl = null,
+                WebhookMethod = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

@@ -2671,6 +2671,8 @@ await client.Trunks.CreateTrunkAsync(
         Name = "My Outbound Trunk",
         TrunkType = "OUTBOUND",
         MaxConcurrentCalls = 10,
+        WebhookUrl = "https://your-app.example.com/trunk-webhook",
+        WebhookMethod = CreateTrunkRequestWebhookMethod.Post,
     }
 );
 ```

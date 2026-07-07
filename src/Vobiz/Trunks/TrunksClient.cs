@@ -447,6 +447,8 @@ public partial class TrunksClient : ITrunksClient
     ///         Name = "My Outbound Trunk",
     ///         TrunkType = "OUTBOUND",
     ///         MaxConcurrentCalls = 10,
+    ///         WebhookUrl = "https://your-app.example.com/trunk-webhook",
+    ///         WebhookMethod = CreateTrunkRequestWebhookMethod.Post,
     ///     }
     /// );
     /// </code></example>

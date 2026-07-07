@@ -66,6 +66,8 @@ public class CreateTrunkTest : BaseMockServerTest
                 Name = "name",
                 TrunkType = "trunk_type",
                 MaxConcurrentCalls = 1,
+                WebhookUrl = null,
+                WebhookMethod = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -78,7 +80,9 @@ public class CreateTrunkTest : BaseMockServerTest
             {
               "name": "My Outbound Trunk",
               "trunk_type": "OUTBOUND",
-              "max_concurrent_calls": 10
+              "max_concurrent_calls": 10,
+              "webhook_url": "https://your-app.example.com/trunk-webhook",
+              "webhook_method": "POST"
             }
             """;
 
@@ -128,6 +132,8 @@ public class CreateTrunkTest : BaseMockServerTest
                 Name = "My Outbound Trunk",
                 TrunkType = "OUTBOUND",
                 MaxConcurrentCalls = 10,
+                WebhookUrl = "https://your-app.example.com/trunk-webhook",
+                WebhookMethod = CreateTrunkRequestWebhookMethod.Post,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
