@@ -159,9 +159,10 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 4)
+        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 5)
             .Add("country", request.Country)
             .Add("search", request.Search)
+            .Add("exclude", request.Exclude)
             .Add("page", request.Page)
             .Add("per_page", request.PerPage)
             .MergeAdditional(options?.AdditionalQueryParameters)
