@@ -863,7 +863,12 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
     /// </summary>
     /// <example><code>
     /// await client.PhoneNumbers.ListInventoryNumbersAsync(
-    ///     new ListInventoryNumbersRequest { AuthId = "MA_XXXXXX", Country = "IN" }
+    ///     new ListInventoryNumbersRequest
+    ///     {
+    ///         AuthId = "MA_XXXXXX",
+    ///         Country = "IN",
+    ///         Exclude = "9180,9192",
+    ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<ListInventoryNumbersResponse> ListInventoryNumbersAsync(

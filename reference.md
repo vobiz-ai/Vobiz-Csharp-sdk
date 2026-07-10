@@ -2172,7 +2172,12 @@ are returned. These numbers are ready to be purchased.
 
 ```csharp
 await client.PhoneNumbers.ListInventoryNumbersAsync(
-    new ListInventoryNumbersRequest { AuthId = "MA_XXXXXX", Country = "IN" }
+    new ListInventoryNumbersRequest
+    {
+        AuthId = "MA_XXXXXX",
+        Country = "IN",
+        Exclude = "9180,9192",
+    }
 );
 ```
 </dd>

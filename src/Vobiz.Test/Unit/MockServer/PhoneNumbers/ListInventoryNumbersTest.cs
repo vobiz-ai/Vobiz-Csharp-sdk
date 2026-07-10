@@ -148,6 +148,7 @@ public class ListInventoryNumbersTest : BaseMockServerTest
                     .RequestBuilders.Request.Create()
                     .WithPath("/api/v1/Account/MA_XXXXXX/inventory/numbers")
                     .WithParam("country", "IN")
+                    .WithParam("exclude", "9180", "9192")
                     .UsingGet()
             )
             .RespondWith(
@@ -158,7 +159,12 @@ public class ListInventoryNumbersTest : BaseMockServerTest
             );
 
         var response = await Client.PhoneNumbers.ListInventoryNumbersAsync(
-            new ListInventoryNumbersRequest { AuthId = "MA_XXXXXX", Country = "IN" }
+            new ListInventoryNumbersRequest
+            {
+                AuthId = "MA_XXXXXX",
+                Country = "IN",
+                Exclude = "9180,9192",
+            }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }
