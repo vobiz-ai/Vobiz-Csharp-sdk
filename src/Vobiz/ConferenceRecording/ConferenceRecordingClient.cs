@@ -1,3 +1,4 @@
+using global::System.Text.Json;
 using Vobiz.Core;
 
 namespace Vobiz;
@@ -11,7 +12,7 @@ public partial class ConferenceRecordingClient : IConferenceRecordingClient
         _client = client;
     }
 
-    private async Task<RawResponse> StartConferenceRecordingAsyncCore(
+    private async Task<WithRawResponse<object>> StartConferenceRecordingAsyncCore(
         StartConferenceRecordingRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -43,12 +44,38 @@ public partial class ConferenceRecordingClient : IConferenceRecordingClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            return new Vobiz.RawResponse()
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
             {
-                StatusCode = response.Raw.StatusCode,
-                Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-            };
+                var responseData = JsonUtils.Deserialize<object>(responseBody)!;
+                return new WithRawResponse<object>()
+                {
+                    Data = responseData,
+                    RawResponse = new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new VobizApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e,
+                    rawResponse: new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    }
+                );
+            }
         }
         {
             var responseBody = await response
@@ -124,20 +151,20 @@ public partial class ConferenceRecordingClient : IConferenceRecordingClient
     }
 
     /// <summary>
-    /// Begin recording all audio in a conference room.
+    /// Queue recording for all audio in a conference room. The response does not include a recording ID or download URL.
     /// </summary>
     /// <example><code>
     /// await client.ConferenceRecording.StartConferenceRecordingAsync(
     ///     new StartConferenceRecordingRequest { AuthId = "MA_XXXXXX", ConferenceName = "conference_name" }
     /// );
     /// </code></example>
-    public WithRawResponseTask StartConferenceRecordingAsync(
+    public WithRawResponseTask<object> StartConferenceRecordingAsync(
         StartConferenceRecordingRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(
+        return new WithRawResponseTask<object>(
             StartConferenceRecordingAsyncCore(request, options, cancellationToken)
         );
     }

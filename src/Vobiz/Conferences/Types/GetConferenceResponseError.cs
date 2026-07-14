@@ -5,20 +5,17 @@ using Vobiz.Core;
 namespace Vobiz;
 
 [Serializable]
-public record ListConferencesResponse : IJsonOnDeserialized
+public record GetConferenceResponseError : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    [JsonPropertyName("error")]
+    public required GetConferenceResponseErrorError Error { get; set; }
+
     [JsonPropertyName("api_id")]
     public required string ApiId { get; set; }
-
-    /// <summary>
-    /// Conference names reported by the API. An empty array is inconclusive.
-    /// </summary>
-    [JsonPropertyName("conferences")]
-    public IEnumerable<string> Conferences { get; set; } = new List<string>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

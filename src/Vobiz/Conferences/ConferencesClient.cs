@@ -1,4 +1,5 @@
 using global::System.Text.Json;
+using OneOf;
 using Vobiz.Core;
 
 namespace Vobiz;
@@ -146,7 +147,11 @@ public partial class ConferencesClient : IConferencesClient
         }
     }
 
-    private async Task<WithRawResponse<object>> GetConferenceAsyncCore(
+    private async Task<
+        WithRawResponse<
+            OneOf<GetConferenceResponseConferenceMemberCount, GetConferenceResponseError>
+        >
+    > GetConferenceAsyncCore(
         GetConferenceRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -181,8 +186,12 @@ public partial class ConferencesClient : IConferencesClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<object>(responseBody)!;
-                return new WithRawResponse<object>()
+                var responseData = JsonUtils.Deserialize<
+                    OneOf<GetConferenceResponseConferenceMemberCount, GetConferenceResponseError>
+                >(responseBody)!;
+                return new WithRawResponse<
+                    OneOf<GetConferenceResponseConferenceMemberCount, GetConferenceResponseError>
+                >()
                 {
                     Data = responseData,
                     RawResponse = new Vobiz.RawResponse()
@@ -213,6 +222,28 @@ public partial class ConferencesClient : IConferencesClient
             var responseBody = await response
                 .Raw.Content.ReadAsStringAsync(cancellationToken)
                 .ConfigureAwait(false);
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 404:
+                        throw new NotFoundError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
             throw new VobizApiApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -283,7 +314,7 @@ public partial class ConferencesClient : IConferencesClient
     }
 
     /// <summary>
-    /// Retrieve all active conference rooms on the account.
+    /// Retrieve conference room names reported by the API. An empty array is inconclusive and can occur while conferences are active. Maintain your own room registry for authoritative discovery, billing, cleanup, and destructive workflows.
     /// </summary>
     /// <example><code>
     /// await client.Conferences.ListConferencesAsync(new ListConferencesRequest { AuthId = "MA_XXXXXX" });
@@ -319,22 +350,24 @@ public partial class ConferencesClient : IConferencesClient
     }
 
     /// <summary>
-    /// Get details and member list of a specific conference room.
+    /// Retrieve a specific conference room. A live conference can currently return a 200 response with an error payload instead of conference details.
     /// </summary>
     /// <example><code>
     /// await client.Conferences.GetConferenceAsync(
     ///     new GetConferenceRequest { AuthId = "MA_XXXXXX", ConferenceName = "My Conf Room" }
     /// );
     /// </code></example>
-    public WithRawResponseTask<object> GetConferenceAsync(
+    public WithRawResponseTask<
+        OneOf<GetConferenceResponseConferenceMemberCount, GetConferenceResponseError>
+    > GetConferenceAsync(
         GetConferenceRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<object>(
-            GetConferenceAsyncCore(request, options, cancellationToken)
-        );
+        return new WithRawResponseTask<
+            OneOf<GetConferenceResponseConferenceMemberCount, GetConferenceResponseError>
+        >(GetConferenceAsyncCore(request, options, cancellationToken));
     }
 
     /// <summary>

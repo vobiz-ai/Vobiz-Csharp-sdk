@@ -150,7 +150,7 @@ public partial class ConferenceClient : IConferenceClient
         }
     }
 
-    private async Task<RawResponse> PlayAudioMemberAsyncCore(
+    private async Task<WithRawResponse<object>> PlayAudioMemberAsyncCore(
         PlayAudioMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -183,12 +183,38 @@ public partial class ConferenceClient : IConferenceClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            return new Vobiz.RawResponse()
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
             {
-                StatusCode = response.Raw.StatusCode,
-                Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-            };
+                var responseData = JsonUtils.Deserialize<object>(responseBody)!;
+                return new WithRawResponse<object>()
+                {
+                    Data = responseData,
+                    RawResponse = new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new VobizApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e,
+                    rawResponse: new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    }
+                );
+            }
         }
         {
             var responseBody = await response
@@ -264,7 +290,7 @@ public partial class ConferenceClient : IConferenceClient
         }
     }
 
-    private async Task<RawResponse> DeafMemberAsyncCore(
+    private async Task<WithRawResponse<object>> DeafMemberAsyncCore(
         DeafMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -295,12 +321,38 @@ public partial class ConferenceClient : IConferenceClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            return new Vobiz.RawResponse()
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
             {
-                StatusCode = response.Raw.StatusCode,
-                Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-            };
+                var responseData = JsonUtils.Deserialize<object>(responseBody)!;
+                return new WithRawResponse<object>()
+                {
+                    Data = responseData,
+                    RawResponse = new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new VobizApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e,
+                    rawResponse: new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    }
+                );
+            }
         }
         {
             var responseBody = await response
@@ -377,7 +429,7 @@ public partial class ConferenceClient : IConferenceClient
     }
 
     /// <summary>
-    /// Remove a specific participant from a conference call.
+    /// Remove one or more participants from a conference while allowing their XML flow to continue.
     /// </summary>
     /// <example><code>
     /// await client.Conference.KickMemberAsync(
@@ -401,7 +453,7 @@ public partial class ConferenceClient : IConferenceClient
     }
 
     /// <summary>
-    /// Disconnect a specific member from a conference.
+    /// Terminate one or more active conference member calls. A normal active-member request disconnects the member. If a member was kicked, continued its XML flow, and rejoined with the same numeric member ID, confirm removal through conference exit or call hangup callbacks.
     /// </summary>
     /// <example><code>
     /// await client.Conference.HangupMemberAsync(
@@ -436,13 +488,13 @@ public partial class ConferenceClient : IConferenceClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask PlayAudioMemberAsync(
+    public WithRawResponseTask<object> PlayAudioMemberAsync(
         PlayAudioMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(
+        return new WithRawResponseTask<object>(
             PlayAudioMemberAsyncCore(request, options, cancellationToken)
         );
     }
@@ -484,13 +536,15 @@ public partial class ConferenceClient : IConferenceClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask DeafMemberAsync(
+    public WithRawResponseTask<object> DeafMemberAsync(
         DeafMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(DeafMemberAsyncCore(request, options, cancellationToken));
+        return new WithRawResponseTask<object>(
+            DeafMemberAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>

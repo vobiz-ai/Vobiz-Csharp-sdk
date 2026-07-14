@@ -2893,7 +2893,7 @@ await client.Trunks.DeleteTrunkAsync(
 <dl>
 <dd>
 
-Remove a specific participant from a conference call.
+Remove one or more participants from a conference while allowing their XML flow to continue.
 </dd>
 </dl>
 </dd>
@@ -2954,7 +2954,7 @@ await client.Conference.KickMemberAsync(
 <dl>
 <dd>
 
-Disconnect a specific member from a conference.
+Terminate one or more active conference member calls. A normal active-member request disconnects the member. If a member was kicked, continued its XML flow, and rejoined with the same numeric member ID, confirm removal through conference exit or call hangup callbacks.
 </dd>
 </dl>
 </dd>
@@ -3003,7 +3003,7 @@ await client.Conference.HangupMemberAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Conference.<a href="/src/Vobiz/Conference/ConferenceClient.cs">PlayAudioMemberAsync</a>(PlayAudioMemberRequest { ... }) -> WithRawResponseTask</code></summary>
+<details><summary><code>client.Conference.<a href="/src/Vobiz/Conference/ConferenceClient.cs">PlayAudioMemberAsync</a>(PlayAudioMemberRequest { ... }) -> WithRawResponseTask&lt;object&gt;</code></summary>
 <dl>
 <dd>
 
@@ -3126,7 +3126,7 @@ await client.Conference.StopAudioMemberAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Conference.<a href="/src/Vobiz/Conference/ConferenceClient.cs">DeafMemberAsync</a>(DeafMemberRequest { ... }) -> WithRawResponseTask</code></summary>
+<details><summary><code>client.Conference.<a href="/src/Vobiz/Conference/ConferenceClient.cs">DeafMemberAsync</a>(DeafMemberRequest { ... }) -> WithRawResponseTask&lt;object&gt;</code></summary>
 <dl>
 <dd>
 
@@ -3924,7 +3924,7 @@ await client.AudioStreams.StopStreamAsync(
 <dl>
 <dd>
 
-Retrieve all active conference rooms on the account.
+Retrieve conference room names reported by the API. An empty array is inconclusive and can occur while conferences are active. Maintain your own room registry for authoritative discovery, billing, cleanup, and destructive workflows.
 </dd>
 </dl>
 </dd>
@@ -4022,7 +4022,7 @@ await client.Conferences.DeleteAllConferencesAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Conferences.<a href="/src/Vobiz/Conferences/ConferencesClient.cs">GetConferenceAsync</a>(GetConferenceRequest { ... }) -> WithRawResponseTask&lt;object&gt;</code></summary>
+<details><summary><code>client.Conferences.<a href="/src/Vobiz/Conferences/ConferencesClient.cs">GetConferenceAsync</a>(GetConferenceRequest { ... }) -> WithRawResponseTask&lt;OneOf&lt;GetConferenceResponseConferenceMemberCount, GetConferenceResponseError&gt;&gt;</code></summary>
 <dl>
 <dd>
 
@@ -4034,7 +4034,7 @@ await client.Conferences.DeleteAllConferencesAsync(
 <dl>
 <dd>
 
-Get details and member list of a specific conference room.
+Retrieve a specific conference room. A live conference can currently return a 200 response with an error payload instead of conference details.
 </dd>
 </dl>
 </dd>
@@ -4135,7 +4135,7 @@ await client.Conferences.DeleteConferenceAsync(
 </details>
 
 ## ConferenceMembers
-<details><summary><code>client.ConferenceMembers.<a href="/src/Vobiz/ConferenceMembers/ConferenceMembersClient.cs">MuteMemberAsync</a>(MuteMemberRequest { ... }) -> WithRawResponseTask</code></summary>
+<details><summary><code>client.ConferenceMembers.<a href="/src/Vobiz/ConferenceMembers/ConferenceMembersClient.cs">MuteMemberAsync</a>(MuteMemberRequest { ... }) -> WithRawResponseTask&lt;object&gt;</code></summary>
 <dl>
 <dd>
 
@@ -4258,7 +4258,7 @@ await client.ConferenceMembers.UnmuteMemberAsync(
 </details>
 
 ## ConferenceRecording
-<details><summary><code>client.ConferenceRecording.<a href="/src/Vobiz/ConferenceRecording/ConferenceRecordingClient.cs">StartConferenceRecordingAsync</a>(StartConferenceRecordingRequest { ... }) -> WithRawResponseTask</code></summary>
+<details><summary><code>client.ConferenceRecording.<a href="/src/Vobiz/ConferenceRecording/ConferenceRecordingClient.cs">StartConferenceRecordingAsync</a>(StartConferenceRecordingRequest { ... }) -> WithRawResponseTask&lt;object&gt;</code></summary>
 <dl>
 <dd>
 
@@ -4270,7 +4270,7 @@ await client.ConferenceMembers.UnmuteMemberAsync(
 <dl>
 <dd>
 
-Begin recording all audio in a conference room.
+Queue recording for all audio in a conference room. The response does not include a recording ID or download URL.
 </dd>
 </dl>
 </dd>

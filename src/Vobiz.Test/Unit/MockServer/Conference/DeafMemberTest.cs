@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Vobiz;
 using Vobiz.Test.Unit.MockServer;
+using Vobiz.Test.Utils;
 
 namespace Vobiz.Test.Unit.MockServer.Conference;
 
@@ -9,8 +10,14 @@ namespace Vobiz.Test.Unit.MockServer.Conference;
 public class DeafMemberTest : BaseMockServerTest
 {
     [NUnit.Framework.Test]
-    public void MockServerTest_1()
+    public async Task MockServerTest_1()
     {
+        const string mockResponse = """
+            {
+              "key": "value"
+            }
+            """;
+
         Server
             .Given(
                 WireMock
@@ -20,23 +27,37 @@ public class DeafMemberTest : BaseMockServerTest
                     )
                     .UsingPost()
             )
-            .RespondWith(WireMock.ResponseBuilders.Response.Create().WithStatusCode(200));
+            .RespondWith(
+                WireMock
+                    .ResponseBuilders.Response.Create()
+                    .WithStatusCode(200)
+                    .WithBody(mockResponse)
+            );
 
-        Assert.DoesNotThrowAsync(async () =>
-            await Client.Conference.DeafMemberAsync(
-                new DeafMemberRequest
-                {
-                    AuthId = "auth_id",
-                    ConferenceName = "conference_name",
-                    MemberId = "member_id",
-                }
-            )
+        var response = await Client.Conference.DeafMemberAsync(
+            new DeafMemberRequest
+            {
+                AuthId = "auth_id",
+                ConferenceName = "conference_name",
+                MemberId = "member_id",
+            }
         );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 
     [NUnit.Framework.Test]
-    public void MockServerTest_2()
+    public async Task MockServerTest_2()
     {
+        const string mockResponse = """
+            {
+              "message": "deaf",
+              "member_id": [
+                "2"
+              ],
+              "api_id": "API_REQUEST_ID"
+            }
+            """;
+
         Server
             .Given(
                 WireMock
@@ -46,17 +67,21 @@ public class DeafMemberTest : BaseMockServerTest
                     )
                     .UsingPost()
             )
-            .RespondWith(WireMock.ResponseBuilders.Response.Create().WithStatusCode(200));
+            .RespondWith(
+                WireMock
+                    .ResponseBuilders.Response.Create()
+                    .WithStatusCode(200)
+                    .WithBody(mockResponse)
+            );
 
-        Assert.DoesNotThrowAsync(async () =>
-            await Client.Conference.DeafMemberAsync(
-                new DeafMemberRequest
-                {
-                    AuthId = "MA_XXXXXX",
-                    ConferenceName = "conference_name",
-                    MemberId = "member_id",
-                }
-            )
+        var response = await Client.Conference.DeafMemberAsync(
+            new DeafMemberRequest
+            {
+                AuthId = "MA_XXXXXX",
+                ConferenceName = "conference_name",
+                MemberId = "member_id",
+            }
         );
+        JsonAssert.AreEqual(response, mockResponse);
     }
 }

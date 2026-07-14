@@ -3,9 +3,9 @@ namespace Vobiz;
 public partial interface IConferenceRecordingClient
 {
     /// <summary>
-    /// Begin recording all audio in a conference room.
+    /// Queue recording for all audio in a conference room. The response does not include a recording ID or download URL.
     /// </summary>
-    WithRawResponseTask StartConferenceRecordingAsync(
+    WithRawResponseTask<object> StartConferenceRecordingAsync(
         StartConferenceRecordingRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

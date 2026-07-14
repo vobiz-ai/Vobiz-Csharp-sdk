@@ -50,7 +50,11 @@ public class KickMemberTest : BaseMockServerTest
     {
         const string mockResponse = """
             {
-              "message": "Member kicked from conference"
+              "message": "kicked",
+              "member_id": [
+                "2"
+              ],
+              "api_id": "API_REQUEST_ID"
             }
             """;
 

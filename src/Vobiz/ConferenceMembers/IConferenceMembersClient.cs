@@ -5,7 +5,7 @@ public partial interface IConferenceMembersClient
     /// <summary>
     /// Prevent a member from speaking. Use `all` as member_id to mute everyone.
     /// </summary>
-    WithRawResponseTask MuteMemberAsync(
+    WithRawResponseTask<object> MuteMemberAsync(
         MuteMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

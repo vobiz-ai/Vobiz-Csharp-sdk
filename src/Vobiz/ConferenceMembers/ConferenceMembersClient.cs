@@ -1,3 +1,4 @@
+using global::System.Text.Json;
 using Vobiz.Core;
 
 namespace Vobiz;
@@ -11,7 +12,7 @@ public partial class ConferenceMembersClient : IConferenceMembersClient
         _client = client;
     }
 
-    private async Task<RawResponse> MuteMemberAsyncCore(
+    private async Task<WithRawResponse<object>> MuteMemberAsyncCore(
         MuteMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -42,12 +43,38 @@ public partial class ConferenceMembersClient : IConferenceMembersClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            return new Vobiz.RawResponse()
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
             {
-                StatusCode = response.Raw.StatusCode,
-                Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-            };
+                var responseData = JsonUtils.Deserialize<object>(responseBody)!;
+                return new WithRawResponse<object>()
+                {
+                    Data = responseData,
+                    RawResponse = new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new VobizApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e,
+                    rawResponse: new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    }
+                );
+            }
         }
         {
             var responseBody = await response
@@ -136,13 +163,15 @@ public partial class ConferenceMembersClient : IConferenceMembersClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask MuteMemberAsync(
+    public WithRawResponseTask<object> MuteMemberAsync(
         MuteMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(MuteMemberAsyncCore(request, options, cancellationToken));
+        return new WithRawResponseTask<object>(
+            MuteMemberAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>

@@ -16,12 +16,8 @@ public class ListConferencesTest : BaseMockServerTest
             {
               "api_id": "api_id",
               "conferences": [
-                {
-                  "key": "value"
-                },
-                {
-                  "key": "value"
-                }
+                "conferences",
+                "conferences"
               ]
             }
             """;
@@ -51,11 +47,9 @@ public class ListConferencesTest : BaseMockServerTest
     {
         const string mockResponse = """
             {
-              "api_id": "api_id",
+              "api_id": "API_REQUEST_ID",
               "conferences": [
-                {
-                  "key": "value"
-                }
+                "conferences"
               ]
             }
             """;

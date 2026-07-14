@@ -3,7 +3,7 @@ namespace Vobiz;
 public partial interface IConferenceClient
 {
     /// <summary>
-    /// Remove a specific participant from a conference call.
+    /// Remove one or more participants from a conference while allowing their XML flow to continue.
     /// </summary>
     WithRawResponseTask<object> KickMemberAsync(
         KickMemberRequest request,
@@ -12,7 +12,7 @@ public partial interface IConferenceClient
     );
 
     /// <summary>
-    /// Disconnect a specific member from a conference.
+    /// Terminate one or more active conference member calls. A normal active-member request disconnects the member. If a member was kicked, continued its XML flow, and rejoined with the same numeric member ID, confirm removal through conference exit or call hangup callbacks.
     /// </summary>
     WithRawResponseTask HangupMemberAsync(
         HangupMemberRequest request,
@@ -23,7 +23,7 @@ public partial interface IConferenceClient
     /// <summary>
     /// Play an audio file to a specific conference member.
     /// </summary>
-    WithRawResponseTask PlayAudioMemberAsync(
+    WithRawResponseTask<object> PlayAudioMemberAsync(
         PlayAudioMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -41,7 +41,7 @@ public partial interface IConferenceClient
     /// <summary>
     /// Prevent a conference member from hearing other participants.
     /// </summary>
-    WithRawResponseTask DeafMemberAsync(
+    WithRawResponseTask<object> DeafMemberAsync(
         DeafMemberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
