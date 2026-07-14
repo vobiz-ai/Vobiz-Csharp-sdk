@@ -18,9 +18,10 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 2)
-            .Add("limit", request.Limit)
-            .Add("offset", request.Offset)
+        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 3)
+            .Add("page", request.Page)
+            .Add("per_page", request.PerPage)
+            .Add("search", request.Search)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
         var _headers = await new Vobiz.Core.HeadersBuilder.Builder()
@@ -826,7 +827,9 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
     /// List all phone numbers on your account.
     /// </summary>
     /// <example><code>
-    /// await client.PhoneNumbers.ListNumbersAsync(new ListNumbersRequest { AuthId = "MA_XXXXXX" });
+    /// await client.PhoneNumbers.ListNumbersAsync(
+    ///     new ListNumbersRequest { AuthId = "MA_XXXXXX", Search = "+919876543210" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<ListNumbersResponse> ListNumbersAsync(
         ListNumbersRequest request,

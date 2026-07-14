@@ -206,6 +206,7 @@ public class ListNumbersTest : BaseMockServerTest
                 WireMock
                     .RequestBuilders.Request.Create()
                     .WithPath("/api/v1/Account/MA_XXXXXX/numbers")
+                    .WithParam("search", "+919876543210")
                     .UsingGet()
             )
             .RespondWith(
@@ -216,7 +217,7 @@ public class ListNumbersTest : BaseMockServerTest
             );
 
         var response = await Client.PhoneNumbers.ListNumbersAsync(
-            new ListNumbersRequest { AuthId = "MA_XXXXXX" }
+            new ListNumbersRequest { AuthId = "MA_XXXXXX", Search = "+919876543210" }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }

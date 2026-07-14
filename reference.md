@@ -2059,7 +2059,9 @@ List all phone numbers on your account.
 <dd>
 
 ```csharp
-await client.PhoneNumbers.ListNumbersAsync(new ListNumbersRequest { AuthId = "MA_XXXXXX" });
+await client.PhoneNumbers.ListNumbersAsync(
+    new ListNumbersRequest { AuthId = "MA_XXXXXX", Search = "+919876543210" }
+);
 ```
 </dd>
 </dl>
