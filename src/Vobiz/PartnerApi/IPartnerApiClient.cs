@@ -79,6 +79,11 @@ public partial interface IPartnerApiClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Returns the authenticated partner's KYC sessions. Filter the list by
+    /// session status or customer account, and use `page` and `size` to
+    /// paginate the results.
+    /// </summary>
     WithRawResponseTask<ListKycSessionsResponse> ListKycSessionsAsync(
         ListKycSessionsRequest request,
         RequestOptions? options = null,
@@ -96,6 +101,10 @@ public partial interface IPartnerApiClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Returns the current status and available details for one KYC session
+    /// owned by the authenticated partner.
+    /// </summary>
     WithRawResponseTask GetKycSessionAsync(
         GetKycSessionRequest request,
         RequestOptions? options = null,

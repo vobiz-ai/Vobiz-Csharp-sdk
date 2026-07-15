@@ -6283,6 +6283,22 @@ await client.PartnerApi.ListCustomerNumbersAsync(
 <dl>
 <dd>
 
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns the authenticated partner's KYC sessions. Filter the list by
+session status or customer account, and use `page` and `size` to
+paginate the results.
+</dd>
+</dl>
+</dd>
+</dl>
+
 #### 🔌 Usage
 
 <dl>
@@ -6380,6 +6396,21 @@ await client.PartnerApi.CreateKycSessionAsync(
 <details><summary><code>client.PartnerApi.<a href="/src/Vobiz/PartnerApi/PartnerApiClient.cs">GetKycSessionAsync</a>(GetKycSessionRequest { ... }) -> WithRawResponseTask</code></summary>
 <dl>
 <dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns the current status and available details for one KYC session
+owned by the authenticated partner.
+</dd>
+</dl>
+</dd>
+</dl>
 
 #### 🔌 Usage
 

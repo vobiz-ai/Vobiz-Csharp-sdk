@@ -1332,6 +1332,11 @@ public partial class PartnerApiClient : IPartnerApiClient
         );
     }
 
+    /// <summary>
+    /// Returns the authenticated partner's KYC sessions. Filter the list by
+    /// session status or customer account, and use `page` and `size` to
+    /// paginate the results.
+    /// </summary>
     /// <example><code>
     /// await client.PartnerApi.ListKycSessionsAsync(new ListKycSessionsRequest());
     /// </code></example>
@@ -1367,6 +1372,10 @@ public partial class PartnerApiClient : IPartnerApiClient
         );
     }
 
+    /// <summary>
+    /// Returns the current status and available details for one KYC session
+    /// owned by the authenticated partner.
+    /// </summary>
     /// <example><code>
     /// await client.PartnerApi.GetKycSessionAsync(new GetKycSessionRequest { SessionId = "session_id" });
     /// </code></example>
