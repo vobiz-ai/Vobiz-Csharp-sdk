@@ -1,4 +1,4 @@
-// vobizxml — build VobizXML call-control documents in C# / .NET.
+// vobizxml - build VobizXML call-control documents in C# / .NET.
 //
 // Mirrors Plivo's `plivoxml` (ResponseElement + Add* builders + ToString()) and emits
 // XML byte-identical to the Python `vobizxml` package and the Node `@vobiz/sdk` builder.

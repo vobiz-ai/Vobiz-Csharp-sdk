@@ -19,13 +19,13 @@ public record CreateTrunkRequest
     public required string Name { get; set; }
 
     /// <summary>
-    /// Direction of the trunk — **`inbound` or `outbound` only** (a trunk is one direction, not both).
+    /// Direction of the trunk - **`inbound` or `outbound` only** (a trunk is one direction, not both).
     /// </summary>
     [JsonPropertyName("trunk_direction")]
     public CreateTrunkRequestTrunkDirection? TrunkDirection { get; set; }
 
     /// <summary>
-    /// Trunk status — `enabled` or `disabled` (note: not `active`).
+    /// Trunk status - `enabled` or `disabled` (note: not `active`).
     /// </summary>
     [JsonPropertyName("trunk_status")]
     public CreateTrunkRequestTrunkStatus? TrunkStatus { get; set; }
@@ -110,7 +110,7 @@ public record CreateTrunkRequest
 
     /// <summary>
     /// Customer webhook for call-admission events (`CallInitiated` / `Hangup`).
-    /// Must be a valid **public** http/https URL. SSRF-validated — localhost,
+    /// Must be a valid **public** http/https URL. SSRF-validated - localhost,
     /// private (RFC1918), and cloud-metadata (`169.254.169.254`) URLs are
     /// rejected with `invalid webhook_url`. See [Trunk Webhooks](/trunks/webhook).
     /// </summary>
@@ -130,19 +130,19 @@ public record CreateTrunkRequest
     public bool? RecordingWebhookEnabled { get; set; }
 
     /// <summary>
-    /// Deprecated — use `credential_uuid`.
+    /// Deprecated - use `credential_uuid`.
     /// </summary>
     [JsonPropertyName("username")]
     public string? Username { get; set; }
 
     /// <summary>
-    /// Deprecated — use `credential_uuid`.
+    /// Deprecated - use `credential_uuid`.
     /// </summary>
     [JsonPropertyName("password")]
     public string? Password { get; set; }
 
     /// <summary>
-    /// Deprecated — use `ipacl_uuid`.
+    /// Deprecated - use `ipacl_uuid`.
     /// </summary>
     [JsonPropertyName("ip_whitelist")]
     public IEnumerable<string>? IpWhitelist { get; set; }

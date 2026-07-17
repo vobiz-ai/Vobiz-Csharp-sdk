@@ -886,9 +886,9 @@ Create a new sub-account under the master account.
 
 Set `kyc_mode` to control how the sub-account is verified:
 
-- `personal_use` *(default)* — the sub-account inherits the parent's
+- `personal_use` *(default)* - the sub-account inherits the parent's
   KYC; no separate verification is required.
-- `customer_use` — the sub-account must complete its own KYC before it
+- `customer_use` - the sub-account must complete its own KYC before it
   can place calls. A fresh `customer_use` sub-account is returned with
   `kyc_calls_blocked: true`. `customer_use` **requires** `email`.
 </dd>
@@ -1620,7 +1620,7 @@ await client.SubAccountKyc.CreateSubaccountKycSessionAsync(
 <dl>
 <dd>
 
-Mock PAN verification — never hits the provider. Magic `pan` inputs:
+Mock PAN verification - never hits the provider. Magic `pan` inputs:
 
 | Input | Outcome |
 |---|---|
@@ -1980,7 +1980,7 @@ await client.SubAccountKycTestMode.MockSubaccountDigilockerVerifyAsync(
 <dd>
 
 Promotes the most recent **pending** mock verification of the given
-type to a terminal outcome — this drives the async (`TESTPENDING…`)
+type to a terminal outcome - this drives the async (`TESTPENDING…`)
 path without webhooks. `verification_type` ∈ `pan | aadhaar | gst | cin`;
 `outcome` ∈ `verified | failed`.
 </dd>

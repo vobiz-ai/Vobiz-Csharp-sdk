@@ -19,7 +19,7 @@ public record UpdateTrunkRequest
     public string? Name { get; set; }
 
     /// <summary>
-    /// Direction of the trunk — `inbound` or `outbound` only.
+    /// Direction of the trunk - `inbound` or `outbound` only.
     /// </summary>
     [JsonPropertyName("trunk_direction")]
     public UpdateTrunkRequestTrunkDirection? TrunkDirection { get; set; }
