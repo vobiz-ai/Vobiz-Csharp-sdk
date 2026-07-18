@@ -93,6 +93,128 @@ await client.Account.GetConcurrencyAsync(new GetConcurrencyRequest { AuthId = "M
 </dl>
 </details>
 
+<details><summary><code>client.Account.<a href="/src/Vobiz/Account/AccountClient.cs">PreviewChannelPricingAsync</a>(PreviewChannelPricingRequest { ... }) -> WithRawResponseTask&lt;ChannelPricingPreview&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Calculate the monthly price for CPS or concurrent-call capacity without purchasing capacity or debiting the account.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Account.PreviewChannelPricingAsync(
+    new PreviewChannelPricingRequest
+    {
+        AuthId = "MA_XXXX",
+        ResourceType = CapacityResourceType.ConcurrentCalls,
+        Quantity = 30,
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `PreviewChannelPricingRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Account.<a href="/src/Vobiz/Account/AccountClient.cs">CreateChannelSubscriptionAsync</a>(ChannelSubscriptionRequest { ... }) -> WithRawResponseTask&lt;ChannelSubscription&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Purchase recurring CPS or concurrent-call capacity. A successful request immediately debits the first monthly charge and activates a subscription that renews every 30 days.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Account.CreateChannelSubscriptionAsync(
+    new ChannelSubscriptionRequest
+    {
+        AuthId = "MA_XXXX",
+        ResourceType = CapacityResourceType.ConcurrentCalls,
+        Quantity = 30,
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `ChannelSubscriptionRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Balance
 <details><summary><code>client.Balance.<a href="/src/Vobiz/Balance/BalanceClient.cs">GetBalanceAsync</a>(GetBalanceRequest { ... }) -> WithRawResponseTask&lt;GetBalanceResponse&gt;</code></summary>
 <dl>

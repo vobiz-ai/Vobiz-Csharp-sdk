@@ -84,7 +84,7 @@ public partial class SubAccountKycClient : ISubAccountKycClient
                 {
                     case 403:
                         throw new ForbiddenError(
-                            JsonUtils.Deserialize<Error>(responseBody),
+                            JsonUtils.Deserialize<object>(responseBody),
                             rawResponse: new Vobiz.RawResponse()
                             {
                                 StatusCode = response.Raw.StatusCode,

@@ -43,15 +43,13 @@ Instantiate and use the client with the following:
 ```csharp
 using Vobiz;
 
-var client = new VobizApiClient("AUTH_TOKEN", "API_KEY");
-await client.Calls.MakeCallAsync(
-    new MakeCallRequest
+var client = new VobizApiClient("AUTH_ID", "AUTH_TOKEN", "TOKEN");
+await client.Account.CreateChannelSubscriptionAsync(
+    new ChannelSubscriptionRequest
     {
-        AuthId = "MA_XXXXXX",
-        From = "14155551234",
-        To = "+919876543210",
-        AnswerUrl = "https://example.com/answer",
-        AnswerMethod = "POST",
+        AuthId = "MA_XXXX",
+        ResourceType = CapacityResourceType.ConcurrentCalls,
+        Quantity = 30,
     }
 );
 ```
@@ -78,7 +76,7 @@ will be thrown.
 using Vobiz;
 
 try {
-    var response = await client.Calls.MakeCallAsync(...);
+    var response = await client.Account.CreateChannelSubscriptionAsync(...);
 } catch (VobizApiApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
@@ -121,7 +119,7 @@ Which status codes are retried depends on the `retryStatusCodes` generator confi
 Use the `MaxRetries` request option to configure this behavior.
 
 ```csharp
-var response = await client.Calls.MakeCallAsync(
+var response = await client.Account.CreateChannelSubscriptionAsync(
     ...,
     new RequestOptions {
         MaxRetries: 0 // Override MaxRetries at the request level
@@ -134,7 +132,7 @@ var response = await client.Calls.MakeCallAsync(
 The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
 
 ```csharp
-var response = await client.Calls.MakeCallAsync(
+var response = await client.Account.CreateChannelSubscriptionAsync(
     ...,
     new RequestOptions {
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
@@ -150,7 +148,7 @@ Access raw HTTP response data (status code, headers, URL) alongside parsed respo
 using Vobiz;
 
 // Access raw response data (status code, headers, etc.) alongside the parsed response
-var result = await client.Calls.MakeCallAsync(...).WithRawResponse();
+var result = await client.Account.CreateChannelSubscriptionAsync(...).WithRawResponse();
 
 // Access the parsed data
 var data = result.Data;
@@ -167,7 +165,7 @@ if (headers.TryGetValue("X-Request-Id", out var requestId))
 }
 
 // For the default behavior, simply await without .WithRawResponse()
-var data = await client.Calls.MakeCallAsync(...);
+var data = await client.Account.CreateChannelSubscriptionAsync(...);
 
 // .WithRawResponse() also works on streaming endpoints (returns IAsyncEnumerable<T> + RawResponse)
 // and on endpoints with no response body (returns RawResponse only).
@@ -178,7 +176,7 @@ var data = await client.Calls.MakeCallAsync(...);
 If you would like to send additional headers as part of the request, use the `AdditionalHeaders` request option.
 
 ```csharp
-var response = await client.Calls.MakeCallAsync(
+var response = await client.Account.CreateChannelSubscriptionAsync(
     ...,
     new RequestOptions {
         AdditionalHeaders = new Dictionary<string, string?>
@@ -194,7 +192,7 @@ var response = await client.Calls.MakeCallAsync(
 If you would like to send additional query parameters as part of the request, use the `AdditionalQueryParameters` request option.
 
 ```csharp
-var response = await client.Calls.MakeCallAsync(
+var response = await client.Account.CreateChannelSubscriptionAsync(
     ...,
     new RequestOptions {
         AdditionalQueryParameters = new Dictionary<string, string>

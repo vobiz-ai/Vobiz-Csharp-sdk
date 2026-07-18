@@ -7,8 +7,9 @@ public partial class VobizApiClient : IVobizApiClient
     private readonly RawClient _client;
 
     public VobizApiClient(
+        string authId,
         string authToken,
-        string? apiKey = null,
+        string? token = null,
         ClientOptions? clientOptions = null
     )
     {
@@ -32,8 +33,9 @@ public partial class VobizApiClient : IVobizApiClient
         var authHeaders = new Headers(
             new Dictionary<string, string>()
             {
+                { "X-Auth-ID", authId },
                 { "X-Auth-Token", authToken },
-                { "X-Auth-ID", apiKey ?? "" },
+                { "Authorization", $"Bearer {token ?? ""}" },
             }
         );
         foreach (var header in authHeaders)

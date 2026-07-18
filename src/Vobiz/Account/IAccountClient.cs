@@ -18,4 +18,22 @@ public partial interface IAccountClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// Calculate the monthly price for CPS or concurrent-call capacity without purchasing capacity or debiting the account.
+    /// </summary>
+    WithRawResponseTask<ChannelPricingPreview> PreviewChannelPricingAsync(
+        PreviewChannelPricingRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Purchase recurring CPS or concurrent-call capacity. A successful request immediately debits the first monthly charge and activates a subscription that renews every 30 days.
+    /// </summary>
+    WithRawResponseTask<ChannelSubscription> CreateChannelSubscriptionAsync(
+        ChannelSubscriptionRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }
