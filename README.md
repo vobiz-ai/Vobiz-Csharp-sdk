@@ -43,7 +43,7 @@ Instantiate and use the client with the following:
 ```csharp
 using Vobiz;
 
-var client = new VobizApiClient("AUTH_ID", "AUTH_TOKEN", "USERNAME", "PASSWORD");
+var client = new VobizApiClient("AUTH_ID", "AUTH_TOKEN", "TOKEN");
 await client.Account.CreateChannelSubscriptionAsync(
     new ChannelSubscriptionRequest
     {
