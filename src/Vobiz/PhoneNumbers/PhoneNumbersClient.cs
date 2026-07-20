@@ -105,6 +105,10 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
         CancellationToken cancellationToken = default
     )
     {
+        var _queryString = new Vobiz.Core.QueryStringBuilder.Builder(capacity: 1)
+            .Add("immediate", request.Immediate)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var _headers = await new Vobiz.Core.HeadersBuilder.Builder()
             .Add(_client.Options.Headers)
             .Add(_client.Options.AdditionalHeaders)
@@ -121,6 +125,7 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
                         ValueConvert.ToPathParameterString(request.AuthId),
                         ValueConvert.ToPathParameterString(request.E164)
                     ),
+                    QueryString = _queryString,
                     Headers = _headers,
                     Options = options,
                 },
@@ -140,6 +145,147 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
             var responseBody = await response
                 .Raw.Content.ReadAsStringAsync(cancellationToken)
                 .ConfigureAwait(false);
+            throw new VobizApiApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody,
+                rawResponse: new Vobiz.RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                }
+            );
+        }
+    }
+
+    private async Task<WithRawResponse<CancelNumberReleaseResponse>> CancelNumberReleaseAsyncCore(
+        CancelNumberReleaseRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Vobiz.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    Method = HttpMethod.Post,
+                    Path = string.Format(
+                        "api/v1/account/{0}/numbers/{1}/cancel-release",
+                        ValueConvert.ToPathParameterString(request.AccountId),
+                        ValueConvert.ToPathParameterString(request.E164)
+                    ),
+                    Headers = _headers,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                var responseData = JsonUtils.Deserialize<CancelNumberReleaseResponse>(
+                    responseBody
+                )!;
+                return new WithRawResponse<CancelNumberReleaseResponse>()
+                {
+                    Data = responseData,
+                    RawResponse = new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new VobizApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e,
+                    rawResponse: new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    }
+                );
+            }
+        }
+        {
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    case 401:
+                        throw new UnauthorizedError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    case 403:
+                        throw new ForbiddenError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    case 404:
+                        throw new NotFoundError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
             throw new VobizApiApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -843,7 +989,10 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
     }
 
     /// <summary>
-    /// Release a phone number from your account.
+    /// Release a phone number from your account. By default, the number enters
+    /// `pending_release` for a 24-hour cooldown. You can cancel the release during
+    /// that window. Set `immediate=true` to skip the cooldown; an immediate release
+    /// cannot be cancelled.
     /// </summary>
     /// <example><code>
     /// await client.PhoneNumbers.UnrentNumberAsync(
@@ -857,6 +1006,28 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
     )
     {
         return new WithRawResponseTask(UnrentNumberAsyncCore(request, options, cancellationToken));
+    }
+
+    /// <summary>
+    /// Cancel a pending number release during the 24-hour cooldown. The number is
+    /// restored to `active`, the cooldown timer is cleared, and the release fee is
+    /// refunded. Any trunk or voice application detached by the release is not
+    /// re-attached automatically.
+    /// </summary>
+    /// <example><code>
+    /// await client.PhoneNumbers.CancelNumberReleaseAsync(
+    ///     new CancelNumberReleaseRequest { AccountId = "MA_XXXXXX", E164 = "%2B919876543210" }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<CancelNumberReleaseResponse> CancelNumberReleaseAsync(
+        CancelNumberReleaseRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<CancelNumberReleaseResponse>(
+            CancelNumberReleaseAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>

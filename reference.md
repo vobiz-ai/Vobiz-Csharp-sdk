@@ -2222,7 +2222,10 @@ await client.PhoneNumbers.ListNumbersAsync(
 <dl>
 <dd>
 
-Release a phone number from your account.
+Release a phone number from your account. By default, the number enters
+`pending_release` for a 24-hour cooldown. You can cancel the release during
+that window. Set `immediate=true` to skip the cooldown; an immediate release
+cannot be cancelled.
 </dd>
 </dl>
 </dd>
@@ -2255,6 +2258,65 @@ await client.PhoneNumbers.UnrentNumberAsync(
 <dd>
 
 **request:** `UnrentNumberRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.PhoneNumbers.<a href="/src/Vobiz/PhoneNumbers/PhoneNumbersClient.cs">CancelNumberReleaseAsync</a>(CancelNumberReleaseRequest { ... }) -> WithRawResponseTask&lt;CancelNumberReleaseResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Cancel a pending number release during the 24-hour cooldown. The number is
+restored to `active`, the cooldown timer is cleared, and the release fee is
+refunded. Any trunk or voice application detached by the release is not
+re-attached automatically.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.PhoneNumbers.CancelNumberReleaseAsync(
+    new CancelNumberReleaseRequest { AccountId = "MA_XXXXXX", E164 = "%2B919876543210" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `CancelNumberReleaseRequest` 
     
 </dd>
 </dl>

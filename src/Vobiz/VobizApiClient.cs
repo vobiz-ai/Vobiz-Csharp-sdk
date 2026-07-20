@@ -9,7 +9,8 @@ public partial class VobizApiClient : IVobizApiClient
     public VobizApiClient(
         string authId,
         string authToken,
-        string? token = null,
+        string? username = null,
+        string? password = null,
         ClientOptions? clientOptions = null
     )
     {
@@ -35,13 +36,14 @@ public partial class VobizApiClient : IVobizApiClient
             {
                 { "X-Auth-ID", authId },
                 { "X-Auth-Token", authToken },
-                { "Authorization", $"Bearer {token ?? ""}" },
             }
         );
         foreach (var header in authHeaders)
         {
             clientOptionsWithAuth.Headers[header.Key] = header.Value;
         }
+        clientOptionsWithAuth.Headers["Authorization"] =
+            $"Basic {Convert.ToBase64String(global::System.Text.Encoding.UTF8.GetBytes($"{username}:{password}"))}";
         _client = new RawClient(clientOptionsWithAuth);
         Account = new AccountClient(_client);
         Balance = new BalanceClient(_client);
