@@ -17,8 +17,14 @@ public record CancelNumberReleaseResponse : IJsonOnDeserialized
     [JsonPropertyName("status")]
     public required CancelNumberReleaseResponseStatus Status { get; set; }
 
+    [JsonPropertyName("currency")]
+    public string? Currency { get; set; }
+
+    [JsonPropertyName("refund_amount")]
+    public double? RefundAmount { get; set; }
+
     [JsonPropertyName("refund_status")]
-    public required CancelNumberReleaseResponseRefundStatus RefundStatus { get; set; }
+    public CancelNumberReleaseResponseRefundStatus? RefundStatus { get; set; }
 
     /// <summary>
     /// Present when the refund could not be processed.

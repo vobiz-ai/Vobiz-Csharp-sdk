@@ -99,7 +99,7 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
         }
     }
 
-    private async Task<RawResponse> UnrentNumberAsyncCore(
+    private async Task<WithRawResponse<UnrentNumberResponse>> UnrentNumberAsyncCore(
         UnrentNumberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -134,12 +134,38 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            return new Vobiz.RawResponse()
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
             {
-                StatusCode = response.Raw.StatusCode,
-                Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-            };
+                var responseData = JsonUtils.Deserialize<UnrentNumberResponse>(responseBody)!;
+                return new WithRawResponse<UnrentNumberResponse>()
+                {
+                    Data = responseData,
+                    RawResponse = new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new VobizApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e,
+                    rawResponse: new Vobiz.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    }
+                );
+            }
         }
         {
             var responseBody = await response
@@ -996,23 +1022,25 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
     /// </summary>
     /// <example><code>
     /// await client.PhoneNumbers.UnrentNumberAsync(
-    ///     new UnrentNumberRequest { AuthId = "MA_XXXXXX", E164 = "919876543210" }
+    ///     new UnrentNumberRequest { AuthId = "MA_XXXXXX", E164 = "%2B919876543210" }
     /// );
     /// </code></example>
-    public WithRawResponseTask UnrentNumberAsync(
+    public WithRawResponseTask<UnrentNumberResponse> UnrentNumberAsync(
         UnrentNumberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(UnrentNumberAsyncCore(request, options, cancellationToken));
+        return new WithRawResponseTask<UnrentNumberResponse>(
+            UnrentNumberAsyncCore(request, options, cancellationToken)
+        );
     }
 
     /// <summary>
     /// Cancel a pending number release during the 24-hour cooldown. The number is
     /// restored to `active`, the cooldown timer is cleared, and the release fee is
-    /// refunded. Any trunk or voice application detached by the release is not
-    /// re-attached automatically.
+    /// refunded in full to the account balance. Any trunk or voice application
+    /// detached by the release is not re-attached automatically.
     /// </summary>
     /// <example><code>
     /// await client.PhoneNumbers.CancelNumberReleaseAsync(

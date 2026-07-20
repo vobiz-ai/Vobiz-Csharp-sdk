@@ -17,7 +17,7 @@ public partial interface IPhoneNumbersClient
     /// that window. Set `immediate=true` to skip the cooldown; an immediate release
     /// cannot be cancelled.
     /// </summary>
-    WithRawResponseTask UnrentNumberAsync(
+    WithRawResponseTask<UnrentNumberResponse> UnrentNumberAsync(
         UnrentNumberRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -26,8 +26,8 @@ public partial interface IPhoneNumbersClient
     /// <summary>
     /// Cancel a pending number release during the 24-hour cooldown. The number is
     /// restored to `active`, the cooldown timer is cleared, and the release fee is
-    /// refunded. Any trunk or voice application detached by the release is not
-    /// re-attached automatically.
+    /// refunded in full to the account balance. Any trunk or voice application
+    /// detached by the release is not re-attached automatically.
     /// </summary>
     WithRawResponseTask<CancelNumberReleaseResponse> CancelNumberReleaseAsync(
         CancelNumberReleaseRequest request,

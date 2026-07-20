@@ -13,7 +13,7 @@ public record UnrentNumberRequest
     public required string AuthId { get; set; }
 
     /// <summary>
-    /// Phone number in E.164 format (without the +)
+    /// The URL-encoded phone number in E.164 format. Encode `+` as `%2B`.
     /// </summary>
     [JsonIgnore]
     public required string E164 { get; set; }

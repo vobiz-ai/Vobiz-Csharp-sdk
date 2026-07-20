@@ -16,6 +16,8 @@ public class CancelNumberReleaseTest : BaseMockServerTest
             {
               "message": "message",
               "status": "active",
+              "currency": "currency",
+              "refund_amount": 1.1,
               "refund_status": "success",
               "refund_error": "refund_error"
             }
@@ -48,6 +50,8 @@ public class CancelNumberReleaseTest : BaseMockServerTest
             {
               "message": "release cancelled, number restored to active status",
               "status": "active",
+              "currency": "INR",
+              "refund_amount": 700,
               "refund_status": "success",
               "refund_error": "refund_error"
             }
@@ -80,6 +84,8 @@ public class CancelNumberReleaseTest : BaseMockServerTest
             {
               "message": "release cancelled, number restored to active status",
               "status": "active",
+              "currency": "currency",
+              "refund_amount": 1.1,
               "refund_status": "failed",
               "refund_error": "could not process refund, please contact support"
             }

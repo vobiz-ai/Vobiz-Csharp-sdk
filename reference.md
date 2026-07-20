@@ -2210,7 +2210,7 @@ await client.PhoneNumbers.ListNumbersAsync(
 </dl>
 </details>
 
-<details><summary><code>client.PhoneNumbers.<a href="/src/Vobiz/PhoneNumbers/PhoneNumbersClient.cs">UnrentNumberAsync</a>(UnrentNumberRequest { ... }) -> WithRawResponseTask</code></summary>
+<details><summary><code>client.PhoneNumbers.<a href="/src/Vobiz/PhoneNumbers/PhoneNumbersClient.cs">UnrentNumberAsync</a>(UnrentNumberRequest { ... }) -> WithRawResponseTask&lt;UnrentNumberResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2241,7 +2241,7 @@ cannot be cancelled.
 
 ```csharp
 await client.PhoneNumbers.UnrentNumberAsync(
-    new UnrentNumberRequest { AuthId = "MA_XXXXXX", E164 = "919876543210" }
+    new UnrentNumberRequest { AuthId = "MA_XXXXXX", E164 = "%2B919876543210" }
 );
 ```
 </dd>
@@ -2283,8 +2283,8 @@ await client.PhoneNumbers.UnrentNumberAsync(
 
 Cancel a pending number release during the 24-hour cooldown. The number is
 restored to `active`, the cooldown timer is cleared, and the release fee is
-refunded. Any trunk or voice application detached by the release is not
-re-attached automatically.
+refunded in full to the account balance. Any trunk or voice application
+detached by the release is not re-attached automatically.
 </dd>
 </dl>
 </dd>
