@@ -2222,10 +2222,12 @@ await client.PhoneNumbers.ListNumbersAsync(
 <dl>
 <dd>
 
-Release a phone number from your account. By default, the number enters
-`pending_release` for a 24-hour cooldown. You can cancel the release during
-that window. Set `immediate=true` to skip the cooldown; an immediate release
-cannot be cancelled.
+Release a phone number from your account. Releasing a number incurs the
+number-release fee configured for the account; the response returns the
+charged amount in `release_fee`. By default, the number enters
+`pending_release` for a 24-hour cooldown. Cancelling during that window
+refunds the release fee. Set `immediate=true` to skip the cooldown; an
+immediate release cannot be cancelled.
 </dd>
 </dl>
 </dd>
@@ -4712,6 +4714,89 @@ await client.Recordings.DeleteRecordingAsync(
 <dd>
 
 **request:** `DeleteRecordingRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Bulk Operations
+<details><summary><code>client.BulkOperations.<a href="/src/Vobiz/BulkOperations/BulkOperationsClient.cs">BulkExportRecordingsAsync</a>(BulkExportRecordingsRequest { ... }) -> WithRawResponseTask&lt;BulkExportRecordingsResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Queue a bulk export of the recordings matching your filter criteria. The request is
+validated and accepted for background processing, and the resulting archive is emailed
+as a download link to every address in `recipient.customer_account`. The archive is
+typically available within 15-60 minutes depending on volume.
+
+Results are delivered by email only; the export runs to completion in the background
+after the `202` response.
+
+One export runs at a time per account. While an export is in progress, further requests
+return `403`.
+
+Filter rules:
+- Use either `from`/`to` or the `recording_storage_duration*` filters, not both.
+- Use one of `__gt` or `__gte`, and one of `__lt` or `__lte`.
+- When using range filters (`__gte`/`__lte`), provide both.
+- Maximum date range is 1 year (366 days); maximum storage duration range is 30 days.
+- The additional filters (`from_number`, `to_number`, `call_uuid`, `conference_name`,
+  `recording_format`, `recording_id`) apply when the range is 30 days or less.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.BulkOperations.BulkExportRecordingsAsync(
+    new BulkExportRecordingsRequest
+    {
+        AuthId = "MA_XXXXXX",
+        Recipient = new BulkExportRecordingsRequestRecipient
+        {
+            CustomerAccount = new List<string>() { "admin@example.com" },
+        },
+        From = "2025-01-23 00:00:00",
+        To = "2025-01-30 23:59:59",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `BulkExportRecordingsRequest` 
     
 </dd>
 </dl>

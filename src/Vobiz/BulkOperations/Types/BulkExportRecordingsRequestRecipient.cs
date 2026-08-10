@@ -4,33 +4,21 @@ using Vobiz.Core;
 
 namespace Vobiz;
 
+/// <summary>
+/// Email delivery targets for the export archive.
+/// </summary>
 [Serializable]
-public record UnrentNumberResponse : IJsonOnDeserialized
+public record BulkExportRecordingsRequestRecipient : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("cancel_url")]
-    public required string CancelUrl { get; set; }
-
-    [JsonPropertyName("cooldown_ends_at")]
-    public required DateTime CooldownEndsAt { get; set; }
-
-    [JsonPropertyName("message")]
-    public required string Message { get; set; }
-
-    [JsonPropertyName("note")]
-    public string? Note { get; set; }
-
     /// <summary>
-    /// The account-specific fee charged for releasing the number.
+    /// Email addresses that receive the download link. All addresses must be in valid format.
     /// </summary>
-    [JsonPropertyName("release_fee")]
-    public required double ReleaseFee { get; set; }
-
-    [JsonPropertyName("status")]
-    public required string Status { get; set; }
+    [JsonPropertyName("customer_account")]
+    public IEnumerable<string> CustomerAccount { get; set; } = new List<string>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -63,6 +63,7 @@ public partial class VobizApiClient : IVobizApiClient
         ConferenceMembers = new ConferenceMembersClient(_client);
         ConferenceRecording = new ConferenceRecordingClient(_client);
         Recordings = new RecordingsClient(_client);
+        BulkOperations = new BulkOperationsClient(_client);
         Credentials = new CredentialsClient(_client);
         IpAccessControlList = new IpAccessControlListClient(_client);
         OriginationUri = new OriginationUriClient(_client);
@@ -110,6 +111,8 @@ public partial class VobizApiClient : IVobizApiClient
     public IConferenceRecordingClient ConferenceRecording { get; }
 
     public IRecordingsClient Recordings { get; }
+
+    public IBulkOperationsClient BulkOperations { get; }
 
     public ICredentialsClient Credentials { get; }
 

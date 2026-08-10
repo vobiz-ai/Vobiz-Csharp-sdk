@@ -15,6 +15,11 @@ public record MakeCallRequest
     [JsonPropertyName("from")]
     public required string From { get; set; }
 
+    /// <summary>
+    /// Destination PSTN number or SIP endpoint. Separate multiple destinations with
+    /// the `&lt;` character to fan out a single request to up to 1000 destinations,
+    /// for example `+919876543210&lt;+919876543211`.
+    /// </summary>
     [JsonPropertyName("to")]
     public required string To { get; set; }
 

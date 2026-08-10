@@ -22,6 +22,7 @@ public partial interface IVobizApiClient
     public IConferenceMembersClient ConferenceMembers { get; }
     public IConferenceRecordingClient ConferenceRecording { get; }
     public IRecordingsClient Recordings { get; }
+    public IBulkOperationsClient BulkOperations { get; }
     public ICredentialsClient Credentials { get; }
     public IIpAccessControlListClient IpAccessControlList { get; }
     public IOriginationUriClient OriginationUri { get; }
