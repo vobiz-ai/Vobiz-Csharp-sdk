@@ -284,7 +284,16 @@ await client.Balance.GetBalanceAsync(
 <dl>
 <dd>
 
-Retrieve paginated transaction history for the account.
+Retrieve paginated transaction history for the account, ordered by
+`created_at` descending. Filter to a single day by setting `from_date`
+and `to_date` to the same date - a bare `YYYY-MM-DD` in `to_date` is
+expanded to `23:59:59`, so both bounds are inclusive. Bare dates resolve
+in the server timezone (UTC); send an explicit offset such as
+`2026-08-28T00:00:00+05:30` to pin a local calendar day.
+
+`limit` and `offset` are not supported - unknown parameters are silently
+dropped. `total` and `summary` are computed over the whole filtered set
+and ignore pagination, so `per_page=1` returns full-window totals.
 </dd>
 </dl>
 </dd>
@@ -299,7 +308,17 @@ Retrieve paginated transaction history for the account.
 <dd>
 
 ```csharp
-await client.Balance.ListTransactionsAsync(new ListTransactionsRequest { AuthId = "MA_XXXXXX" });
+await client.Balance.ListTransactionsAsync(
+    new ListTransactionsRequest
+    {
+        AuthId = "MA_XXXXXX",
+        FromDate = "2026-08-25",
+        ToDate = "2026-08-25",
+        Type = "debit",
+        Currency = "INR",
+        ReferenceType = "cdr",
+    }
+);
 ```
 </dd>
 </dl>
@@ -315,6 +334,62 @@ await client.Balance.ListTransactionsAsync(new ListTransactionsRequest { AuthId 
 <dd>
 
 **request:** `ListTransactionsRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Balance.<a href="/src/Vobiz/Balance/BalanceClient.cs">ListTransactionReferenceTypesAsync</a>(ListTransactionReferenceTypesRequest { ... }) -> WithRawResponseTask&lt;ListTransactionReferenceTypesResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns the distinct `reference_type` values present on the account's ledger. Use it to discover valid values for the `reference_type` filter on the transactions endpoint.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Balance.ListTransactionReferenceTypesAsync(
+    new ListTransactionReferenceTypesRequest { AuthId = "MA_XXXXXX" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `ListTransactionReferenceTypesRequest` 
     
 </dd>
 </dl>

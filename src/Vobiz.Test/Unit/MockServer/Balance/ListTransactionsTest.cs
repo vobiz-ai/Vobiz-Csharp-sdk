@@ -153,6 +153,11 @@ public class ListTransactionsTest : BaseMockServerTest
                 WireMock
                     .RequestBuilders.Request.Create()
                     .WithPath("/api/v1/Account/MA_XXXXXX/transactions")
+                    .WithParam("from_date", "2026-08-25")
+                    .WithParam("to_date", "2026-08-25")
+                    .WithParam("type", "debit")
+                    .WithParam("currency", "INR")
+                    .WithParam("reference_type", "cdr")
                     .UsingGet()
             )
             .RespondWith(
@@ -163,7 +168,15 @@ public class ListTransactionsTest : BaseMockServerTest
             );
 
         var response = await Client.Balance.ListTransactionsAsync(
-            new ListTransactionsRequest { AuthId = "MA_XXXXXX" }
+            new ListTransactionsRequest
+            {
+                AuthId = "MA_XXXXXX",
+                FromDate = "2026-08-25",
+                ToDate = "2026-08-25",
+                Type = "debit",
+                Currency = "INR",
+                ReferenceType = "cdr",
+            }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }
