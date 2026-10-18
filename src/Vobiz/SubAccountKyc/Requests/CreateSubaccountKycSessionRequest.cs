@@ -35,7 +35,7 @@ public record CreateSubaccountKycSessionRequest
     public string? RedirectUrl { get; set; }
 
     /// <summary>
-    /// HTTPS endpoint VoBiz POSTs the KYC result to. Omit it and no callbacks are sent.
+    /// HTTPS endpoint Vobiz POSTs the KYC result to. Omit it and no callbacks are sent.
     /// </summary>
     [JsonPropertyName("webhook_url")]
     public string? WebhookUrl { get; set; }
