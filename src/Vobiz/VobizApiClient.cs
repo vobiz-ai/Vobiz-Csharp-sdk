@@ -1,4 +1,5 @@
 using Vobiz.Core;
+using Vobiz.Sms;
 
 namespace Vobiz;
 
@@ -7,9 +8,8 @@ public partial class VobizApiClient : IVobizApiClient
     private readonly RawClient _client;
 
     public VobizApiClient(
-        string authId,
         string authToken,
-        string? token = null,
+        string? apiKey = null,
         ClientOptions? clientOptions = null
     )
     {
@@ -33,9 +33,8 @@ public partial class VobizApiClient : IVobizApiClient
         var authHeaders = new Headers(
             new Dictionary<string, string>()
             {
-                { "X-Auth-ID", authId },
                 { "X-Auth-Token", authToken },
-                { "Authorization", $"Bearer {token ?? ""}" },
+                { "X-Auth-ID", apiKey ?? "" },
             }
         );
         foreach (var header in authHeaders)
@@ -70,6 +69,7 @@ public partial class VobizApiClient : IVobizApiClient
         Applications = new ApplicationsClient(_client);
         Endpoints = new EndpointsClient(_client);
         PartnerApi = new PartnerApiClient(_client);
+        Sms = new SmsClient(_client);
     }
 
     public IAccountClient Account { get; }
@@ -125,4 +125,6 @@ public partial class VobizApiClient : IVobizApiClient
     public IEndpointsClient Endpoints { get; }
 
     public IPartnerApiClient PartnerApi { get; }
+
+    public ISmsClient Sms { get; }
 }

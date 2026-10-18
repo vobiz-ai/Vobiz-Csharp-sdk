@@ -1,3 +1,5 @@
+using Vobiz.Sms;
+
 namespace Vobiz;
 
 public partial interface IVobizApiClient
@@ -29,4 +31,5 @@ public partial interface IVobizApiClient
     public IApplicationsClient Applications { get; }
     public IEndpointsClient Endpoints { get; }
     public IPartnerApiClient PartnerApi { get; }
+    public ISmsClient Sms { get; }
 }
