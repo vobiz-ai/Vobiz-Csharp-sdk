@@ -33,7 +33,7 @@ public record CreateKycSessionRequest
     public string? RedirectUrl { get; set; }
 
     /// <summary>
-    /// VoBiz POSTs the KYC result here.
+    /// Vobiz POSTs the KYC result here.
     /// </summary>
     [JsonPropertyName("webhook_url")]
     public string? WebhookUrl { get; set; }
