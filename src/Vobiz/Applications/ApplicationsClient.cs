@@ -605,6 +605,8 @@ public partial class ApplicationsClient : IApplicationsClient
     ///         AppName = "My Voice Application",
     ///         AnswerUrl = "https://example.com/answer",
     ///         AnswerMethod = "POST",
+    ///         HangupUrl = "https://example.com/hangup",
+    ///         HangupMethod = "POST",
     ///     }
     /// );
     /// </code></example>
@@ -650,6 +652,10 @@ public partial class ApplicationsClient : IApplicationsClient
     ///         AppId = "12345678",
     ///         AppName = "Updated Application Name",
     ///         DefaultNumberApp = true,
+    ///         AnswerUrl = "https://example.com/answer",
+    ///         AnswerMethod = "POST",
+    ///         HangupUrl = "https://example.com/hangup",
+    ///         HangupMethod = "POST",
     ///     }
     /// );
     /// </code></example>

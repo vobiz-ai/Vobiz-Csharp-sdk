@@ -51,6 +51,8 @@ public class CreateApplicationTest : BaseMockServerTest
                 AppName = "app_name",
                 AnswerUrl = "answer_url",
                 AnswerMethod = "answer_method",
+                HangupUrl = null,
+                HangupMethod = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -63,7 +65,9 @@ public class CreateApplicationTest : BaseMockServerTest
             {
               "app_name": "My Voice Application",
               "answer_url": "https://example.com/answer",
-              "answer_method": "POST"
+              "answer_method": "POST",
+              "hangup_url": "https://example.com/hangup",
+              "hangup_method": "POST"
             }
             """;
 
@@ -98,6 +102,8 @@ public class CreateApplicationTest : BaseMockServerTest
                 AppName = "My Voice Application",
                 AnswerUrl = "https://example.com/answer",
                 AnswerMethod = "POST",
+                HangupUrl = "https://example.com/hangup",
+                HangupMethod = "POST",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

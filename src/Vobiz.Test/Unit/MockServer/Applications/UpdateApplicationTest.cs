@@ -49,6 +49,10 @@ public class UpdateApplicationTest : BaseMockServerTest
                 AppId = "app_id",
                 AppName = "app_name",
                 DefaultNumberApp = true,
+                AnswerUrl = null,
+                AnswerMethod = null,
+                HangupUrl = null,
+                HangupMethod = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -60,7 +64,11 @@ public class UpdateApplicationTest : BaseMockServerTest
         const string requestJson = """
             {
               "app_name": "Updated Application Name",
-              "default_number_app": true
+              "default_number_app": true,
+              "answer_url": "https://example.com/answer",
+              "answer_method": "POST",
+              "hangup_url": "https://example.com/hangup",
+              "hangup_method": "POST"
             }
             """;
 
@@ -94,6 +102,10 @@ public class UpdateApplicationTest : BaseMockServerTest
                 AppId = "12345678",
                 AppName = "Updated Application Name",
                 DefaultNumberApp = true,
+                AnswerUrl = "https://example.com/answer",
+                AnswerMethod = "POST",
+                HangupUrl = "https://example.com/hangup",
+                HangupMethod = "POST",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

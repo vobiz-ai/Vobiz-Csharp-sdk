@@ -713,6 +713,186 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
         }
     }
 
+    private async Task<RawResponse> LinkNumberToApplicationAsyncCore(
+        LinkNumberToApplicationRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Vobiz.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    Method = HttpMethod.Post,
+                    Path = string.Format(
+                        "api/v1/Account/{0}/numbers/{1}/application",
+                        ValueConvert.ToPathParameterString(request.AuthId),
+                        ValueConvert.ToPathParameterString(request.E164)
+                    ),
+                    Body = request,
+                    Headers = _headers,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return new Vobiz.RawResponse()
+            {
+                StatusCode = response.Raw.StatusCode,
+                Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+            };
+        }
+        {
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    case 404:
+                        throw new NotFoundError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    case 409:
+                        throw new ConflictError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new VobizApiApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody,
+                rawResponse: new Vobiz.RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                }
+            );
+        }
+    }
+
+    private async Task<RawResponse> UnlinkNumberFromApplicationAsyncCore(
+        UnlinkNumberFromApplicationRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _headers = await new Vobiz.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    Method = HttpMethod.Delete,
+                    Path = string.Format(
+                        "api/v1/Account/{0}/numbers/{1}/application",
+                        ValueConvert.ToPathParameterString(request.AuthId),
+                        ValueConvert.ToPathParameterString(request.E164)
+                    ),
+                    Headers = _headers,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return new Vobiz.RawResponse()
+            {
+                StatusCode = response.Raw.StatusCode,
+                Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+            };
+        }
+        {
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 404:
+                        throw new NotFoundError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new VobizApiApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody,
+                rawResponse: new Vobiz.RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                }
+            );
+        }
+    }
+
     private async Task<WithRawResponse<GetNumberHealthResponse>> GetNumberHealthAsyncCore(
         GetNumberHealthRequest request,
         RequestOptions? options = null,
@@ -1158,6 +1338,57 @@ public partial class PhoneNumbersClient : IPhoneNumbersClient
     {
         return new WithRawResponseTask(
             UnassignNumberFromTrunkAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Link a phone number to a voice application. Once linked, inbound
+    /// calls to that number fetch VobizXML from the application's
+    /// `answer_url`. A number routes through either an application or a
+    /// SIP trunk, not both: unassign the number from its trunk first
+    /// (`DELETE /api/v1/Account/{auth_id}/numbers/{phone_number}/assign`).
+    /// URL-encode the phone number (use `%2B` instead of `+`).
+    /// </summary>
+    /// <example><code>
+    /// await client.PhoneNumbers.LinkNumberToApplicationAsync(
+    ///     new LinkNumberToApplicationRequest
+    ///     {
+    ///         AuthId = "MA_XXXXXX",
+    ///         E164 = "%2B912271264217",
+    ///         ApplicationId = "12345678901234567",
+    ///     }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask LinkNumberToApplicationAsync(
+        LinkNumberToApplicationRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask(
+            LinkNumberToApplicationAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Remove the link between a phone number and its voice application.
+    /// The number stays in your account inventory but inbound calls no
+    /// longer fetch VobizXML from that application.
+    /// URL-encode the phone number (use `%2B` instead of `+`).
+    /// </summary>
+    /// <example><code>
+    /// await client.PhoneNumbers.UnlinkNumberFromApplicationAsync(
+    ///     new UnlinkNumberFromApplicationRequest { AuthId = "MA_XXXXXX", E164 = "%2B912271264217" }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask UnlinkNumberFromApplicationAsync(
+        UnlinkNumberFromApplicationRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask(
+            UnlinkNumberFromApplicationAsyncCore(request, options, cancellationToken)
         );
     }
 

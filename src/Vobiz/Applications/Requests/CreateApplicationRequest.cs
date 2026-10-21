@@ -21,6 +21,18 @@ public record CreateApplicationRequest
     [JsonPropertyName("answer_method")]
     public required string AnswerMethod { get; set; }
 
+    /// <summary>
+    /// URL Vobiz notifies when a call on this application ends. If omitted, it defaults to `answer_url`.
+    /// </summary>
+    [JsonPropertyName("hangup_url")]
+    public string? HangupUrl { get; set; }
+
+    /// <summary>
+    /// HTTP method used for `hangup_url`, `GET` or `POST`.
+    /// </summary>
+    [JsonPropertyName("hangup_method")]
+    public string? HangupMethod { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

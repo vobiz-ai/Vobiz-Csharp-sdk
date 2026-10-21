@@ -2654,6 +2654,131 @@ await client.PhoneNumbers.UnassignNumberFromTrunkAsync(
 </dl>
 </details>
 
+<details><summary><code>client.PhoneNumbers.<a href="/src/Vobiz/PhoneNumbers/PhoneNumbersClient.cs">LinkNumberToApplicationAsync</a>(LinkNumberToApplicationRequest { ... }) -> WithRawResponseTask</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Link a phone number to a voice application. Once linked, inbound
+calls to that number fetch VobizXML from the application's
+`answer_url`. A number routes through either an application or a
+SIP trunk, not both: unassign the number from its trunk first
+(`DELETE /api/v1/Account/{auth_id}/numbers/{phone_number}/assign`).
+URL-encode the phone number (use `%2B` instead of `+`).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.PhoneNumbers.LinkNumberToApplicationAsync(
+    new LinkNumberToApplicationRequest
+    {
+        AuthId = "MA_XXXXXX",
+        E164 = "%2B912271264217",
+        ApplicationId = "12345678901234567",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `LinkNumberToApplicationRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.PhoneNumbers.<a href="/src/Vobiz/PhoneNumbers/PhoneNumbersClient.cs">UnlinkNumberFromApplicationAsync</a>(UnlinkNumberFromApplicationRequest { ... }) -> WithRawResponseTask</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Remove the link between a phone number and its voice application.
+The number stays in your account inventory but inbound calls no
+longer fetch VobizXML from that application.
+URL-encode the phone number (use `%2B` instead of `+`).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.PhoneNumbers.UnlinkNumberFromApplicationAsync(
+    new UnlinkNumberFromApplicationRequest { AuthId = "MA_XXXXXX", E164 = "%2B912271264217" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `UnlinkNumberFromApplicationRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.PhoneNumbers.<a href="/src/Vobiz/PhoneNumbers/PhoneNumbersClient.cs">GetNumberHealthAsync</a>(GetNumberHealthRequest { ... }) -> WithRawResponseTask&lt;GetNumberHealthResponse&gt;</code></summary>
 <dl>
 <dd>
@@ -5680,6 +5805,8 @@ await client.Applications.CreateApplicationAsync(
         AppName = "My Voice Application",
         AnswerUrl = "https://example.com/answer",
         AnswerMethod = "POST",
+        HangupUrl = "https://example.com/hangup",
+        HangupMethod = "POST",
     }
 );
 ```
@@ -5799,6 +5926,10 @@ await client.Applications.UpdateApplicationAsync(
         AppId = "12345678",
         AppName = "Updated Application Name",
         DefaultNumberApp = true,
+        AnswerUrl = "https://example.com/answer",
+        AnswerMethod = "POST",
+        HangupUrl = "https://example.com/hangup",
+        HangupMethod = "POST",
     }
 );
 ```
