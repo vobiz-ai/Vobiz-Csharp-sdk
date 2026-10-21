@@ -25,7 +25,7 @@ public record SearchCdrsResponse : IJsonOnDeserialized
     public required SearchCdrsResponseFilters Filters { get; set; }
 
     [JsonPropertyName("pagination")]
-    public required SearchCdrsResponsePagination Pagination { get; set; }
+    public required CdrPagination Pagination { get; set; }
 
     [JsonPropertyName("success")]
     public required bool Success { get; set; }

@@ -17,12 +17,10 @@ public class ListRecordingsTest : BaseMockServerTest
               "api_id": "api_id",
               "meta": {
                 "limit": 1,
-                "next": "next",
                 "offset": 1,
-                "previous": {
-                  "key": "value"
-                },
-                "total_count": 1
+                "total_count": 1,
+                "next": "next",
+                "previous": "previous"
               },
               "objects": [
                 {
@@ -92,35 +90,29 @@ public class ListRecordingsTest : BaseMockServerTest
     {
         const string mockResponse = """
             {
-              "api_id": "api_id",
+              "api_id": "aabbccdd-1234-5678-90ab-cdef12345678",
               "meta": {
-                "limit": 1,
-                "next": "next",
-                "offset": 1,
-                "previous": {
-                  "key": "value"
-                },
-                "total_count": 1
+                "limit": 20,
+                "offset": 0,
+                "total_count": 721,
+                "next": "/v1/Account/MA_XXXXXXXX/Recording/?limit=20&offset=20"
               },
               "objects": [
                 {
-                  "add_time": "add_time",
-                  "call_uuid": "call_uuid",
-                  "conference_name": "conference_name",
-                  "from_number": "from_number",
-                  "monthly_recording_storage_amount": 1,
-                  "recording_duration_ms": "recording_duration_ms",
-                  "recording_end_ms": "recording_end_ms",
-                  "recording_format": "recording_format",
-                  "recording_id": "rec_XXXXXXXXXX",
-                  "recording_start_ms": "recording_start_ms",
-                  "recording_storage_duration": 1,
-                  "recording_storage_rate": 1.1,
-                  "recording_type": "recording_type",
-                  "recording_url": "https://storage.vobiz.ai/recordings/rec_XXXXXXXXXX.mp3",
-                  "resource_uri": "resource_uri",
-                  "rounded_recording_duration": 1,
-                  "to_number": "to_number"
+                  "add_time": "2026-05-07 09:45:35.79276+05:30",
+                  "call_uuid": "11223344-5566-7788-99aa-bbccddeeff00",
+                  "from_number": "+919876543210",
+                  "monthly_recording_storage_amount": 0,
+                  "recording_duration_ms": "7880.00000",
+                  "recording_format": "wav",
+                  "recording_id": "aabbccdd-1234-5678-90ab-cdef12345678",
+                  "recording_storage_duration": 6,
+                  "recording_storage_rate": 0.005,
+                  "recording_type": "trunk",
+                  "recording_url": "https://recordings.vobiz.ai/example/abc123.mp3",
+                  "resource_uri": "/v1/Account/MA_XXXXXXXX/Recording/aabbccdd-1234-5678-90ab-cdef12345678/",
+                  "rounded_recording_duration": 60,
+                  "to_number": "+918012345678"
                 }
               ]
             }

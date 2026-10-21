@@ -12,7 +12,7 @@ public record ListTrunksResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("meta")]
-    public required ListTrunksResponseMeta Meta { get; set; }
+    public required TrunkListMeta Meta { get; set; }
 
     [JsonPropertyName("objects")]
     public IEnumerable<ListTrunksResponseObjectsItem> Objects { get; set; } =

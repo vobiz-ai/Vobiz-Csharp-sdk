@@ -12,7 +12,7 @@ public record ListOriginationUrisResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("meta")]
-    public required ListOriginationUrisResponseMeta Meta { get; set; }
+    public required TrunkListMeta Meta { get; set; }
 
     [JsonPropertyName("objects")]
     public IEnumerable<ListOriginationUrisResponseObjectsItem> Objects { get; set; } =

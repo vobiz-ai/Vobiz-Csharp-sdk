@@ -15,7 +15,7 @@ public record ListRecordingsResponse : IJsonOnDeserialized
     public required string ApiId { get; set; }
 
     [JsonPropertyName("meta")]
-    public required ListRecordingsResponseMeta Meta { get; set; }
+    public required PaginationMeta Meta { get; set; }
 
     [JsonPropertyName("objects")]
     public IEnumerable<ListRecordingsResponseObjectsItem> Objects { get; set; } =

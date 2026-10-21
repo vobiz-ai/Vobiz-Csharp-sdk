@@ -22,7 +22,7 @@ public record ListCdrsResponse : IJsonOnDeserialized
         new List<ListCdrsResponseDataItem>();
 
     [JsonPropertyName("pagination")]
-    public required ListCdrsResponsePagination Pagination { get; set; }
+    public required CdrPagination Pagination { get; set; }
 
     [JsonPropertyName("success")]
     public required bool Success { get; set; }

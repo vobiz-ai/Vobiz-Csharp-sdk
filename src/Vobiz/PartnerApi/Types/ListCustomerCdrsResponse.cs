@@ -21,7 +21,7 @@ public record ListCustomerCdrsResponse : IJsonOnDeserialized
     public IEnumerable<object> Data { get; set; } = new List<object>();
 
     [JsonPropertyName("pagination")]
-    public required ListCustomerCdrsResponsePagination Pagination { get; set; }
+    public required CdrPagination Pagination { get; set; }
 
     [JsonPropertyName("success")]
     public required bool Success { get; set; }

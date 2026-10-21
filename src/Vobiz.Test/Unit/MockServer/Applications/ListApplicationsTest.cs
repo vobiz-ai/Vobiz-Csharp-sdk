@@ -17,12 +17,10 @@ public class ListApplicationsTest : BaseMockServerTest
               "api_id": "api_id",
               "meta": {
                 "limit": 1,
-                "next": "next",
                 "offset": 1,
-                "previous": {
-                  "key": "value"
-                },
-                "total_count": 1
+                "total_count": 1,
+                "next": "next",
+                "previous": "previous"
               },
               "objects": [
                 {
@@ -115,9 +113,9 @@ public class ListApplicationsTest : BaseMockServerTest
               "api_id": "aabbccdd-1234-5678-90ab-cdef12345678",
               "meta": {
                 "limit": 20,
-                "next": "/v1/Account/MA_XXXXXXXX/Application/?limit=20&offset=20",
                 "offset": 0,
-                "total_count": 23
+                "total_count": 23,
+                "next": "/v1/Account/MA_XXXXXXXX/Application/?limit=20&offset=20"
               },
               "objects": [
                 {

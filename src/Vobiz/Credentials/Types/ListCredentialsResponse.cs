@@ -12,7 +12,7 @@ public record ListCredentialsResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("meta")]
-    public required ListCredentialsResponseMeta Meta { get; set; }
+    public required TrunkListMeta Meta { get; set; }
 
     [JsonPropertyName("objects")]
     public IEnumerable<ListCredentialsResponseObjectsItem> Objects { get; set; } =

@@ -19,12 +19,8 @@ public class ListEndpointsTest : BaseMockServerTest
                 "limit": 1,
                 "offset": 1,
                 "total_count": 1,
-                "next": {
-                  "key": "value"
-                },
-                "previous": {
-                  "key": "value"
-                }
+                "next": "next",
+                "previous": "previous"
               },
               "objects": [
                 {
