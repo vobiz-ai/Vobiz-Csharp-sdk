@@ -64,7 +64,7 @@ public class CreateIpAclTest : BaseMockServerTest
         const string requestJson = """
             {
               "name": "Office IP",
-              "ip_address": "ip_address"
+              "ip_address": "YOUR_PUBLIC_IP/32"
             }
             """;
 
@@ -101,7 +101,7 @@ public class CreateIpAclTest : BaseMockServerTest
             {
                 AuthId = "MA_XXXXXX",
                 Name = "Office IP",
-                IpAddress = "ip_address",
+                IpAddress = "YOUR_PUBLIC_IP/32",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

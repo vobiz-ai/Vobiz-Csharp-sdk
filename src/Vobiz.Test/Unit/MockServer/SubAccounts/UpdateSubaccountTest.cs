@@ -75,6 +75,7 @@ public class UpdateSubaccountTest : BaseMockServerTest
                 AuthId = "auth_id",
                 SubAuthId = "sub_auth_id",
                 Name = null,
+                IsActive = null,
                 Enabled = null,
                 KycMode = null,
             }

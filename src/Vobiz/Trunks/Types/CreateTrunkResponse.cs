@@ -23,8 +23,11 @@ public record CreateTrunkResponse : IJsonOnDeserialized
     [JsonPropertyName("trunk_domain")]
     public required string TrunkDomain { get; set; }
 
+    /// <summary>
+    /// Trunk state as reported in responses - `active` or `suspended`. Requests set it with `enabled` (reported as `active`) or `disabled` (reported as `suspended`).
+    /// </summary>
     [JsonPropertyName("trunk_status")]
-    public required string TrunkStatus { get; set; }
+    public required CreateTrunkResponseTrunkStatus TrunkStatus { get; set; }
 
     [JsonPropertyName("secure")]
     public required bool Secure { get; set; }

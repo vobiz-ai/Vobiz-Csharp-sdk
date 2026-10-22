@@ -15,11 +15,29 @@ public record UpdateOriginationUriRequest
     [JsonIgnore]
     public required string UriId { get; set; }
 
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    /// <summary>
+    /// SIP URI of your inbound destination.
+    /// </summary>
+    [JsonPropertyName("uri")]
+    public string? Uri { get; set; }
 
+    /// <summary>
+    /// Label for the origination URI.
+    /// </summary>
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Routing priority. Lower values are tried first.
+    /// </summary>
     [JsonPropertyName("priority")]
-    public required int Priority { get; set; }
+    public int? Priority { get; set; }
+
+    /// <summary>
+    /// Not read by the API. Send `description` instead.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

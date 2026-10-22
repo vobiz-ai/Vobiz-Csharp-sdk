@@ -1209,6 +1209,11 @@ await client.SubAccounts.RetrieveSubaccountAsync(
 
 Update the name or status of a sub-account, or change its `kyc_mode`.
 
+Set `is_active` to `false` to deactivate a sub-account. A deactivated
+sub-account no longer appears in the list, and retrieve, update and
+delete requests for it return `404`. The `enabled` field is accepted
+but has no effect.
+
 Promoting an existing sub-account to `customer_use` requires the
 sub-account to already have an `email` (otherwise `400`). On any
 `kyc_mode` change, `kyc_calls_blocked` is re-derived from the
@@ -4826,6 +4831,11 @@ await client.Recordings.ListRecordingsAsync(new ListRecordingsRequest { AuthId =
 <dd>
 
 Get details and download URL for a specific recording.
+
+`recording_url` points at `media.vobiz.ai`. Download it with the same
+`X-Auth-ID` and `X-Auth-Token` headers you use for the API; the media
+host returns `401` without them. The file is WAV, although the media
+host may label it `Content-Type: audio/mpeg`.
 </dd>
 </dl>
 </dd>
@@ -5255,6 +5265,10 @@ await client.Credentials.DeleteCredentialAsync(
 <dd>
 
 Add an IP access control rule to restrict SIP trunk access.
+
+Use the public IP address or CIDR range of your own SBC or PBX. The API
+rejects documentation-only ranges such as `203.0.113.0/24` with `400`.
+Responses return the rule's label in `description`.
 </dd>
 </dl>
 </dd>
@@ -5274,7 +5288,7 @@ await client.IpAccessControlList.CreateIpAclAsync(
     {
         AuthId = "MA_XXXXXX",
         Name = "Office IP",
-        IpAddress = "ip_address",
+        IpAddress = "YOUR_PUBLIC_IP/32",
     }
 );
 ```
@@ -5507,8 +5521,8 @@ await client.OriginationUri.CreateOriginationUriAsync(
     new CreateOriginationUriRequest
     {
         AuthId = "MA_XXXXXX",
-        Name = "Primary SBC",
-        SipUri = "sip:sbc.example.com",
+        Uri = "sip:sbc.example.com",
+        Description = "Primary SBC",
         Priority = 1,
     }
 );
@@ -5626,8 +5640,9 @@ await client.OriginationUri.UpdateOriginationUriAsync(
     {
         AuthId = "MA_XXXXXX",
         UriId = "uri_id",
-        Name = "name",
-        Priority = 1,
+        Uri = "sip:sbc.example.com",
+        Description = "Primary SBC",
+        Priority = 2,
     }
 );
 ```
@@ -6086,6 +6101,10 @@ await client.Endpoints.ListEndpointsAsync(new ListEndpointsRequest { AuthId = "M
 Create a new SIP endpoint that can be used to make and receive calls
 through IP phones, softphones, or SIP clients. Each endpoint is
 assigned a unique SIP URI and endpoint ID.
+
+The API appends digits to the `username` you request (for example,
+`acme01` can become `acme0125672327435497`). Configure your SIP client
+with the `username` returned in the response.
 </dd>
 </dl>
 </dd>
@@ -6107,7 +6126,7 @@ await client.Endpoints.CreateEndpointAsync(
         Username = "john_doe",
         Password = "SecurePassword123!",
         Alias = "John's Desktop Phone",
-        Application = 12345678,
+        AppId = "12345678901234567",
     }
 );
 ```
@@ -6231,6 +6250,7 @@ await client.Endpoints.UpdateEndpointAsync(
         EndpointId = "87654321",
         Alias = "John's Updated Desktop Phone",
         Password = "NewSecurePassword456!",
+        AppId = "12345678901234567",
     }
 );
 ```

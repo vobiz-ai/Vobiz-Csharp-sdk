@@ -554,6 +554,10 @@ public partial class EndpointsClient : IEndpointsClient
     /// Create a new SIP endpoint that can be used to make and receive calls
     /// through IP phones, softphones, or SIP clients. Each endpoint is
     /// assigned a unique SIP URI and endpoint ID.
+    ///
+    /// The API appends digits to the `username` you request (for example,
+    /// `acme01` can become `acme0125672327435497`). Configure your SIP client
+    /// with the `username` returned in the response.
     /// </summary>
     /// <example><code>
     /// await client.Endpoints.CreateEndpointAsync(
@@ -563,7 +567,7 @@ public partial class EndpointsClient : IEndpointsClient
     ///         Username = "john_doe",
     ///         Password = "SecurePassword123!",
     ///         Alias = "John's Desktop Phone",
-    ///         Application = 12345678,
+    ///         AppId = "12345678901234567",
     ///     }
     /// );
     /// </code></example>
@@ -613,6 +617,7 @@ public partial class EndpointsClient : IEndpointsClient
     ///         EndpointId = "87654321",
     ///         Alias = "John's Updated Desktop Phone",
     ///         Password = "NewSecurePassword456!",
+    ///         AppId = "12345678901234567",
     ///     }
     /// );
     /// </code></example>

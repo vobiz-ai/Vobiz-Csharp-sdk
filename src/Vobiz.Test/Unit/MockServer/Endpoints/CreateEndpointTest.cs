@@ -16,8 +16,7 @@ public class CreateEndpointTest : BaseMockServerTest
             {
               "username": "username",
               "password": "password",
-              "alias": "alias",
-              "application": 1
+              "alias": "alias"
             }
             """;
 
@@ -52,7 +51,8 @@ public class CreateEndpointTest : BaseMockServerTest
                 Username = "username",
                 Password = "password",
                 Alias = "alias",
-                Application = 1,
+                AppId = null,
+                Application = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -66,7 +66,7 @@ public class CreateEndpointTest : BaseMockServerTest
               "username": "john_doe",
               "password": "SecurePassword123!",
               "alias": "John's Desktop Phone",
-              "application": 12345678
+              "app_id": "12345678901234567"
             }
             """;
 
@@ -101,7 +101,7 @@ public class CreateEndpointTest : BaseMockServerTest
                 Username = "john_doe",
                 Password = "SecurePassword123!",
                 Alias = "John's Desktop Phone",
-                Application = 12345678,
+                AppId = "12345678901234567",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

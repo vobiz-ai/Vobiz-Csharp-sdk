@@ -21,6 +21,12 @@ public record UpdateEndpointRequest
     [JsonPropertyName("password")]
     public required string Password { get; set; }
 
+    /// <summary>
+    /// ID of the application to attach to this endpoint, as a string.
+    /// </summary>
+    [JsonPropertyName("app_id")]
+    public string? AppId { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

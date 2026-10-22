@@ -50,6 +50,9 @@ public record ListRecordingsResponseObjectsItem : IJsonOnDeserialized
     [JsonPropertyName("recording_type")]
     public required string RecordingType { get; set; }
 
+    /// <summary>
+    /// Download URL for the audio, on `media.vobiz.ai`. Send the same `X-Auth-ID` and `X-Auth-Token` headers as for API requests; without them the media host returns `401`. The body is WAV (RIFF/WAVE PCM), although the response may carry `Content-Type: audio/mpeg`.
+    /// </summary>
     [JsonPropertyName("recording_url")]
     public required string RecordingUrl { get; set; }
 

@@ -352,8 +352,8 @@ public partial class OriginationUriClient : IOriginationUriClient
     ///     new CreateOriginationUriRequest
     ///     {
     ///         AuthId = "MA_XXXXXX",
-    ///         Name = "Primary SBC",
-    ///         SipUri = "sip:sbc.example.com",
+    ///         Uri = "sip:sbc.example.com",
+    ///         Description = "Primary SBC",
     ///         Priority = 1,
     ///     }
     /// );
@@ -397,8 +397,9 @@ public partial class OriginationUriClient : IOriginationUriClient
     ///     {
     ///         AuthId = "MA_XXXXXX",
     ///         UriId = "uri_id",
-    ///         Name = "name",
-    ///         Priority = 1,
+    ///         Uri = "sip:sbc.example.com",
+    ///         Description = "Primary SBC",
+    ///         Priority = 2,
     ///     }
     /// );
     /// </code></example>

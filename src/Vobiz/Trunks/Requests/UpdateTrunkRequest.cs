@@ -24,6 +24,9 @@ public record UpdateTrunkRequest
     [JsonPropertyName("trunk_direction")]
     public UpdateTrunkRequestTrunkDirection? TrunkDirection { get; set; }
 
+    /// <summary>
+    /// Trunk status to set - `enabled` or `disabled`. Responses report `enabled` as `active` and `disabled` as `suspended`.
+    /// </summary>
     [JsonPropertyName("trunk_status")]
     public UpdateTrunkRequestTrunkStatus? TrunkStatus { get; set; }
 

@@ -18,7 +18,7 @@ public class RetrieveTrunkTest : BaseMockServerTest
               "account_id": "account_id",
               "name": "name",
               "trunk_domain": "trunk_domain",
-              "trunk_status": "trunk_status",
+              "trunk_status": "active",
               "secure": true,
               "trunk_direction": "trunk_direction",
               "concurrent_calls_limit": 1,

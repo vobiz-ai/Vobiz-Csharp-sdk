@@ -13,10 +13,7 @@ public class UpdateApplicationTest : BaseMockServerTest
     public async Task MockServerTest_1()
     {
         const string requestJson = """
-            {
-              "app_name": "app_name",
-              "default_number_app": true
-            }
+            {}
             """;
 
         const string mockResponse = """
@@ -47,8 +44,8 @@ public class UpdateApplicationTest : BaseMockServerTest
             {
                 AuthId = "auth_id",
                 AppId = "app_id",
-                AppName = "app_name",
-                DefaultNumberApp = true,
+                AppName = null,
+                DefaultNumberApp = null,
                 AnswerUrl = null,
                 AnswerMethod = null,
                 HangupUrl = null,

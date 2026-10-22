@@ -14,8 +14,7 @@ public class CreateOriginationUriTest : BaseMockServerTest
     {
         const string requestJson = """
             {
-              "name": "name",
-              "sip_uri": "sip_uri",
+              "uri": "uri",
               "priority": 1
             }
             """;
@@ -55,9 +54,11 @@ public class CreateOriginationUriTest : BaseMockServerTest
             new CreateOriginationUriRequest
             {
                 AuthId = "auth_id",
-                Name = "name",
-                SipUri = "sip_uri",
+                Uri = "uri",
+                Description = null,
                 Priority = 1,
+                SipUri = null,
+                Name = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -68,8 +69,8 @@ public class CreateOriginationUriTest : BaseMockServerTest
     {
         const string requestJson = """
             {
-              "name": "Primary SBC",
-              "sip_uri": "sip:sbc.example.com",
+              "uri": "sip:sbc.example.com",
+              "description": "Primary SBC",
               "priority": 1
             }
             """;
@@ -109,8 +110,8 @@ public class CreateOriginationUriTest : BaseMockServerTest
             new CreateOriginationUriRequest
             {
                 AuthId = "MA_XXXXXX",
-                Name = "Primary SBC",
-                SipUri = "sip:sbc.example.com",
+                Uri = "sip:sbc.example.com",
+                Description = "Primary SBC",
                 Priority = 1,
             }
         );

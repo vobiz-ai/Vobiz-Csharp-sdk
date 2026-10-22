@@ -16,10 +16,10 @@ public record UpdateApplicationRequest
     public required string AppId { get; set; }
 
     [JsonPropertyName("app_name")]
-    public required string AppName { get; set; }
+    public string? AppName { get; set; }
 
     [JsonPropertyName("default_number_app")]
-    public required bool DefaultNumberApp { get; set; }
+    public bool? DefaultNumberApp { get; set; }
 
     /// <summary>
     /// URL Vobiz fetches VobizXML from when a call reaches a number or endpoint linked to this application.

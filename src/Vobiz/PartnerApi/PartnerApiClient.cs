@@ -74,6 +74,28 @@ public partial class PartnerApiClient : IPartnerApiClient
             var responseBody = await response
                 .Raw.Content.ReadAsStringAsync(cancellationToken)
                 .ConfigureAwait(false);
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 401:
+                        throw new UnauthorizedError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
             throw new VobizApiApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
@@ -152,6 +174,28 @@ public partial class PartnerApiClient : IPartnerApiClient
             var responseBody = await response
                 .Raw.Content.ReadAsStringAsync(cancellationToken)
                 .ConfigureAwait(false);
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 401:
+                        throw new UnauthorizedError(
+                            JsonUtils.Deserialize<object>(responseBody),
+                            rawResponse: new Vobiz.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
             throw new VobizApiApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,

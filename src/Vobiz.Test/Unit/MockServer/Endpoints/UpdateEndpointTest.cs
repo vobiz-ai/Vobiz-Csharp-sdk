@@ -46,6 +46,7 @@ public class UpdateEndpointTest : BaseMockServerTest
                 EndpointId = "endpoint_id",
                 Alias = "alias",
                 Password = "password",
+                AppId = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -57,7 +58,8 @@ public class UpdateEndpointTest : BaseMockServerTest
         const string requestJson = """
             {
               "alias": "John's Updated Desktop Phone",
-              "password": "NewSecurePassword456!"
+              "password": "NewSecurePassword456!",
+              "app_id": "12345678901234567"
             }
             """;
 
@@ -88,6 +90,7 @@ public class UpdateEndpointTest : BaseMockServerTest
                 EndpointId = "87654321",
                 Alias = "John's Updated Desktop Phone",
                 Password = "NewSecurePassword456!",
+                AppId = "12345678901234567",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

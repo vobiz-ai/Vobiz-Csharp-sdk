@@ -13,10 +13,7 @@ public class UpdateOriginationUriTest : BaseMockServerTest
     public async Task MockServerTest_1()
     {
         const string requestJson = """
-            {
-              "name": "name",
-              "priority": 1
-            }
+            {}
             """;
 
         const string mockResponse = """
@@ -55,8 +52,10 @@ public class UpdateOriginationUriTest : BaseMockServerTest
             {
                 AuthId = "auth_id",
                 UriId = "uri_id",
-                Name = "name",
-                Priority = 1,
+                Uri = null,
+                Description = null,
+                Priority = null,
+                Name = null,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -67,8 +66,9 @@ public class UpdateOriginationUriTest : BaseMockServerTest
     {
         const string requestJson = """
             {
-              "name": "name",
-              "priority": 1
+              "uri": "sip:sbc.example.com",
+              "description": "Primary SBC",
+              "priority": 2
             }
             """;
 
@@ -108,8 +108,9 @@ public class UpdateOriginationUriTest : BaseMockServerTest
             {
                 AuthId = "MA_XXXXXX",
                 UriId = "uri_id",
-                Name = "name",
-                Priority = 1,
+                Uri = "sip:sbc.example.com",
+                Description = "Primary SBC",
+                Priority = 2,
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

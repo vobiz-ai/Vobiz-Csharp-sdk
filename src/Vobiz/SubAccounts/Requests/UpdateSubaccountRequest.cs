@@ -18,6 +18,15 @@ public record UpdateSubaccountRequest
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
+    /// <summary>
+    /// Set to `false` to deactivate the sub-account. A deactivated sub-account no longer appears in list, retrieve, update or delete requests (`404`).
+    /// </summary>
+    [JsonPropertyName("is_active")]
+    public bool? IsActive { get; set; }
+
+    /// <summary>
+    /// Accepted but has no effect. Use `is_active` instead.
+    /// </summary>
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
 
