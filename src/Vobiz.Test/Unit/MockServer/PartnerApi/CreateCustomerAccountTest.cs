@@ -73,7 +73,7 @@ public class CreateCustomerAccountTest : BaseMockServerTest
 
         const string mockResponse = """
             {
-              "auth_id": "MA_ZKITB8Z2",
+              "auth_id": "MA_XXXXXXXX",
               "auth_token": "your_auth_token_here",
               "name": "John Doe",
               "email": "john@example.com",

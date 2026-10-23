@@ -1295,7 +1295,7 @@ public partial class PartnerApiClient : IPartnerApiClient
     /// await client.PartnerApi.PartnerTransferBalanceAsync(
     ///     new PartnerTransferBalanceRequest
     ///     {
-    ///         CustomerAuthId = "MA_ZKITB8Z2",
+    ///         CustomerAuthId = "MA_XXXXXXXX",
     ///         Amount = 500,
     ///         Currency = "INR",
     ///     }
@@ -1402,7 +1402,7 @@ public partial class PartnerApiClient : IPartnerApiClient
     /// </summary>
     /// <example><code>
     /// await client.PartnerApi.CreateKycSessionAsync(
-    ///     new CreateKycSessionRequest { AccountAuthId = "MA_ZKITB8Z2" }
+    ///     new CreateKycSessionRequest { AccountAuthId = "MA_XXXXXXXX" }
     /// );
     /// </code></example>
     public WithRawResponseTask<object> CreateKycSessionAsync(

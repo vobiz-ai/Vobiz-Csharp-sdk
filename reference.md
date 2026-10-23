@@ -6568,7 +6568,7 @@ wallet. Both legs are recorded in each account's ledger. Transfers are
 await client.PartnerApi.PartnerTransferBalanceAsync(
     new PartnerTransferBalanceRequest
     {
-        CustomerAuthId = "MA_ZKITB8Z2",
+        CustomerAuthId = "MA_XXXXXXXX",
         Amount = 500,
         Currency = "INR",
     }
@@ -6860,7 +6860,7 @@ companies). No document uploads required.
 
 ```csharp
 await client.PartnerApi.CreateKycSessionAsync(
-    new CreateKycSessionRequest { AccountAuthId = "MA_ZKITB8Z2" }
+    new CreateKycSessionRequest { AccountAuthId = "MA_XXXXXXXX" }
 );
 ```
 </dd>

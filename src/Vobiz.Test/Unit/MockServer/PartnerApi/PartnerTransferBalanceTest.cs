@@ -82,7 +82,7 @@ public class PartnerTransferBalanceTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/api/v1/partner/accounts/MA_ZKITB8Z2/transfer-balance")
+                    .WithPath("/api/v1/partner/accounts/MA_XXXXXXXX/transfer-balance")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPost()
                     .WithBodyAsJson(requestJson)
@@ -97,7 +97,7 @@ public class PartnerTransferBalanceTest : BaseMockServerTest
         var response = await Client.PartnerApi.PartnerTransferBalanceAsync(
             new PartnerTransferBalanceRequest
             {
-                CustomerAuthId = "MA_ZKITB8Z2",
+                CustomerAuthId = "MA_XXXXXXXX",
                 Amount = 500,
                 Currency = "INR",
             }

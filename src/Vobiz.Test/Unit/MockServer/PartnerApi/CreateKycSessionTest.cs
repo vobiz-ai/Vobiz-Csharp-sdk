@@ -61,14 +61,14 @@ public class CreateKycSessionTest : BaseMockServerTest
     {
         const string requestJson = """
             {
-              "account_auth_id": "MA_ZKITB8Z2"
+              "account_auth_id": "MA_XXXXXXXX"
             }
             """;
 
         const string mockResponse = """
             {
               "session_id": "a5f8da3c-b47f-40c3-a3e6-d2c9a0f27065",
-              "account_auth_id": "MA_E31MAU98",
+              "account_auth_id": "MA_XXXXXXXX",
               "customer_email": "customer@example.com",
               "email_dispatched_to": "c***@example.com",
               "status": "email_sent",
@@ -94,7 +94,7 @@ public class CreateKycSessionTest : BaseMockServerTest
             );
 
         var response = await Client.PartnerApi.CreateKycSessionAsync(
-            new CreateKycSessionRequest { AccountAuthId = "MA_ZKITB8Z2" }
+            new CreateKycSessionRequest { AccountAuthId = "MA_XXXXXXXX" }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }
@@ -104,14 +104,14 @@ public class CreateKycSessionTest : BaseMockServerTest
     {
         const string requestJson = """
             {
-              "account_auth_id": "MA_ZKITB8Z2"
+              "account_auth_id": "MA_XXXXXXXX"
             }
             """;
 
         const string mockResponse = """
             {
               "session_id": "1a0f7da5-2abb-47bf-a6c3-eb5cff7feda5",
-              "account_auth_id": "MA_E31MAU98",
+              "account_auth_id": "MA_XXXXXXXX",
               "status": "link_ready",
               "expires_at": "2026-05-15T19:37:01.841263Z",
               "widget_url": "https://kyc.vobiz.ai/verify?token=kst_cb1b3fda15c0df5cf58a283e47e9eee148ce0b2b87d7c6693f77296612f58f07",
@@ -136,7 +136,7 @@ public class CreateKycSessionTest : BaseMockServerTest
             );
 
         var response = await Client.PartnerApi.CreateKycSessionAsync(
-            new CreateKycSessionRequest { AccountAuthId = "MA_ZKITB8Z2" }
+            new CreateKycSessionRequest { AccountAuthId = "MA_XXXXXXXX" }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }
