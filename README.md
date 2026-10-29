@@ -1,7 +1,6 @@
 # Vobiz C# Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Vobiz%2FC%23)
-[![nuget shield](https://img.shields.io/nuget/v/Vobiz)](https://nuget.org/packages/Vobiz)
 
 The Vobiz C# library provides convenient access to the Vobiz APIs from C#.
 
@@ -24,13 +23,20 @@ The Vobiz C# library provides convenient access to the Vobiz APIs from C#.
 
 ## Requirements
 
-This SDK requires:
+This SDK requires the .NET 8 SDK or later. The library targets `net8.0`, `netstandard2.0` and `net462`.
 
 ## Installation
 
+The SDK is distributed from this GitHub repo, not NuGet. Clone it **next to** your project (not inside the project folder) and add a project reference:
+
 ```sh
-dotnet add package Vobiz
+dotnet new console -o MyApp        # or use your existing project
+git clone https://github.com/vobiz-ai/Vobiz-Csharp-sdk.git
+dotnet add MyApp reference Vobiz-Csharp-sdk/src/Vobiz/Vobiz.csproj
+dotnet build MyApp
 ```
+
+If you clone it inside your project folder, your project compiles the SDK's source files a second time and the build fails.
 
 ## Reference
 
@@ -38,21 +44,27 @@ A full reference for this library is available [here](./reference.md).
 
 ## Usage
 
-Instantiate and use the client with the following:
+Create the client with your Auth Token and Auth ID from the [Vobiz Console](https://console.vobiz.ai). Constructor order is `(authToken, authId)`:
 
 ```csharp
 using Vobiz;
 
-var client = new VobizApiClient("AUTH_TOKEN", "API_KEY");
-await client.Account.CreateChannelSubscriptionAsync(
-    new ChannelSubscriptionRequest
-    {
-        AuthId = "MA_XXXX",
-        ResourceType = CapacityResourceType.ConcurrentCalls,
-        Quantity = 30,
-    }
+string authToken = Environment.GetEnvironmentVariable("VOBIZ_AUTH_TOKEN") ?? "YOUR_AUTH_TOKEN";
+string authId = Environment.GetEnvironmentVariable("VOBIZ_AUTH_ID") ?? "MA_XXXXXXXX";
+
+var client = new VobizApiClient(authToken, authId);
+
+var recordings = await client.Recordings.ListRecordingsAsync(
+    new ListRecordingsRequest { AuthId = authId }
 );
+
+foreach (var recording in recordings.Objects)
+{
+    Console.WriteLine(recording.CallUuid);
+}
 ```
+
+Full guide: [vobiz.ai/docs/integrations/csharp-sdk](https://www.vobiz.ai/docs/integrations/csharp-sdk).
 
 ## Environments
 
